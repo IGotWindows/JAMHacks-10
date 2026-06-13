@@ -1,5 +1,20 @@
 {% extends "base.html" %}
+<<<<<<< HEAD
 {% block title %}Dashboard — Study Space{% endblock %}
+=======
+{% block title %}Dashboard — Studious{% endblock %}
+
+{% block background %}
+<div class="orb-bg" id="orb-bg">
+  <div class="orb-grid"></div>
+  <div class="orb orb-tl"><div class="orb-inner"><div class="beam-container beam-spin-8"><div class="beam-light"></div></div></div></div>
+  <div class="orb orb-bc"><div class="orb-inner"><div class="beam-container beam-spin-10r"><div class="beam-light"></div></div></div></div>
+  <div class="orb orb-tr"><div class="orb-inner"><div class="beam-container beam-spin-6"><div class="beam-light"></div></div></div></div>
+  <div class="orb orb-br"><div class="orb-inner"><div class="beam-container beam-spin-7r"><div class="beam-light"></div></div></div></div>
+</div>
+{% endblock %}
+
+>>>>>>> perry2
 {% block content %}
 <div class="dashboard-layout">
   <section class="dashboard-main">
@@ -65,6 +80,8 @@
 {% endblock %}
 
 {% block scripts %}
+<script src="{{ url_for('static', filename='js/orb-bg.js') }}"></script>
+<script>initOrbBackground(document.getElementById('orb-bg'));</script>
 <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
 <script src="{{ url_for('static', filename='js/calendar-events.js') }}"></script>
 <script src="{{ url_for('static', filename='js/upcoming-events.js') }}"></script>

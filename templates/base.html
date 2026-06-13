@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {% from "macros.html" import logo_badge %}
 <!DOCTYPE html>
 <html lang="en">
@@ -67,3 +68,45 @@
   {% block scripts %}{% endblock %}
 </body>
 </html>
+=======
+{% from "macros.html" import logo_badge %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Studious{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body data-require-auth="true" data-page="{{ request.endpoint }}">
+  {% block background %}{% endblock %}
+  <nav class="nav">
+    {{ logo_badge(url_for('dashboard')) }}
+    <div class="links">
+      <a href="{{ url_for('dashboard') }}" class="{% if request.endpoint == 'dashboard' %}active{% endif %}">Dashboard</a>
+      <a href="{{ url_for('education') }}" class="{% if request.endpoint in ['education', 'focus', 'study', 'grades'] %}active{% endif %}">Education</a>
+      <a href="{{ url_for('calendar_page') }}" class="{% if request.endpoint == 'calendar_page' %}active{% endif %}">Calendar</a>
+      <a href="{{ url_for('health') }}" class="{% if request.endpoint == 'health' %}active{% endif %}">Health</a>
+      <button type="button" class="nav-sign-out" id="sign-out-btn">Sign Out</button>
+    </div>
+  </nav>
+
+  <main class="page">
+    {% block content %}{% endblock %}
+  </main>
+
+  <script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/focus-session.js') }}"></script>
+  <script type="module">
+    import { refreshBackgroundFocusTracking } from '{{ url_for("static", filename="js/focus-background.mjs") }}';
+    window.__studiousRefreshBackground = refreshBackgroundFocusTracking;
+    refreshBackgroundFocusTracking();
+  </script>
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>
+>>>>>>> perry2
