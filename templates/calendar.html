@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}Calendar{% endblock %}
+{% block content %}
+<h1>High School Calendar</h1>
+<p class="calendar-subtitle">Click a day to view, edit, or add events. Use the arrows to change months.</p>
+
+<div class="card calendar-card">
+  <div class="calendar-toolbar">
+    <button type="button" id="prev-month" class="btn secondary" aria-label="Previous month">←</button>
+    <h2 id="month-label" class="month-label"></h2>
+    <button type="button" id="next-month" class="btn secondary" aria-label="Next month">→</button>
+    <button type="button" id="today-btn" class="btn primary">Today</button>
+  </div>
+
+  <div id="calendar-grid" class="calendar-grid">
+    <div class="calendar-day-header">Mon</div>
+    <div class="calendar-day-header">Tue</div>
+    <div class="calendar-day-header">Wed</div>
+    <div class="calendar-day-header">Thu</div>
+    <div class="calendar-day-header">Fri</div>
+    <div class="calendar-day-header">Sat</div>
+    <div class="calendar-day-header">Sun</div>
+  </div>
+</div>
+
+<div id="day-panel" class="card day-panel hidden">
+  <div class="day-panel-header">
+    <h2 id="selected-date-label">Select a day</h2>
+    <button type="button" id="close-panel-btn" class="btn secondary btn-small" aria-label="Close">✕</button>
+  </div>
+  <ul id="selected-day-events" class="panel-event-list"></ul>
+  <p id="no-events-msg" class="no-events-msg hidden">No events yet. Add one below.</p>
+  <div class="add-event-form">
+    <input id="new-event-input" type="text" placeholder="Event name (e.g. Math test)">
+    <div class="time-inputs">
+      <div id="event-start-picker" class="time-picker-box">
+        <span class="time-picker-heading">Start</span>
+        <button type="button" class="time-picker-btn">All day</button>
+        <button type="button" class="time-clear-btn">Clear</button>
+      </div>
+      <div id="event-end-picker" class="time-picker-box">
+        <span class="time-picker-heading">End</span>
+        <button type="button" class="time-picker-btn">All day</button>
+        <button type="button" class="time-clear-btn">Clear</button>
+      </div>
+    </div>
+    <button type="button" id="add-event-btn" class="btn primary">Add Event</button>
+  </div>
+</div>
+
+<!-- ============================================================
+     EDIT DESCRIPTION HERE
+     Change the text inside the <p class="calendar-description"> tag below.
+     File: templates/calendar.html
+     ============================================================ -->
+<div class="card calendar-description-card">
+  <h2>About This Calendar</h2>
+  <p class="calendar-description">
+    This is a sample calendar for a high school student. Click any day to add your own
+    events with a start and end time, remove items you don't need, and browse between
+    months. Your changes are saved automatically in your browser.
+  </p>
+</div>
+
+<script id="calendar-init-data" type="application/json">{{ calendar_json|safe }}</script>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/calendar-events.js') }}"></script>
+<script src="{{ url_for('static', filename='js/calendar.js') }}"></script>
+{% endblock %}

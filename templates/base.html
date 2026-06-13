@@ -13,6 +13,9 @@
       <a href="/">Dashboard</a>
       <a href="/focus">Focus Timer</a>
       <a href="/study">Study Tools</a>
+      <a href="/">Home</a>
+      <a href="/education">Education</a>
+      <a href="/calendar">Calendar</a>
     </div>
   </nav>
 
@@ -21,5 +24,6 @@
   </main>
 
   <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+  {% block scripts %}{% endblock %}
 </body>
 </html>
