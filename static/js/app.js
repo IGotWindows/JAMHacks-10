@@ -444,9 +444,9 @@ function updateDashboard() {
   const hour = new Date().getHours();
   const greeting = document.getElementById("user-greeting");
   if (greeting) {
-    if (hour < 12) greeting.textContent = "Good morning. Ready to make today count?";
-    else if (hour < 18) greeting.textContent = "Good afternoon. How's your day going?";
-    else greeting.textContent = "Good evening. Time to wind down and reflect.";
+    if (hour < 12) greeting.textContent = "Good morning — how did you sleep?";
+    else if (hour < 18) greeting.textContent = "Good afternoon — check in on how you're doing.";
+    else greeting.textContent = "Good evening — time to log the day and unwind.";
   }
 }
 

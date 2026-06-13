@@ -2,12 +2,14 @@
 {% block title %}Focus — Studious{% endblock %}
 {% block content %}
 <h1 class="page-title">Focus</h1>
-<p class="page-subtitle">Stay on task with a Pomodoro timer. Turn on your webcam for a little extra accountability.</p>
+<p class="page-subtitle">Turn on your webcam, hit Start, and earn time only while you're locked in on screen.</p>
 
 <div class="focus-grid">
   <div class="card">
-    <h2>Pomodoro Timer</h2>
-    <div id="timer">25:00</div>
+    <h2>Focus Session</h2>
+    <p class="focus-timer-hint">The clock runs when your focus score stays above 80 — look away and it pauses.</p>
+    <div id="timer" class="focus-timer-display">00:00</div>
+    <p id="timer-status" class="focus-timer-status">Turn on your webcam, then press Start.</p>
     <div class="hero-buttons">
       <button class="btn primary" onclick="startTimer()">Start</button>
       <button class="btn secondary" onclick="resetTimer()">Reset</button>

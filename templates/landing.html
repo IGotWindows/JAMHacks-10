@@ -1,0 +1,17 @@
+{% extends "auth_base.html" %}
+{% from "macros.html" import logo_badge %}
+{% block title %}Welcome — Studious{% endblock %}
+{% block auth_page %}landing{% endblock %}
+{% block content %}
+<div class="cover-page">
+  <div class="cover-inner">
+    <div class="cover-logo">{{ logo_badge() }}</div>
+    <h1 class="cover-title">Study smarter,<br>not longer.</h1>
+    <p class="cover-tagline">Your space for focus, planning, and wellness.</p>
+    <div class="cover-actions">
+      <a href="{{ url_for('login') }}" class="btn primary cover-btn">Sign In</a>
+      <a href="{{ url_for('signup') }}" class="btn secondary cover-btn">Sign Up</a>
+    </div>
+  </div>
+</div>
+{% endblock %}
