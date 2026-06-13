@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "StudyBuddy Widget",
+  "name": "Study Space Widget",
   "version": "1.0",
-  "description": "Opens your StudyBuddy app as a floating widget alongside any page",
+  "description": "Opens Study Space as a floating widget alongside any page",
   "permissions": ["windows", "storage"],
   "action": {
     "default_popup": "popup.html",

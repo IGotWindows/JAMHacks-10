@@ -1,11 +1,10 @@
 {% extends "base.html" %}
 {% from "macros.html" import education_back %}
-{% block title %}Study — Studious{% endblock %}
+{% block title %}Study — Study Space{% endblock %}
 {% block content %}
 <div class="study-page">
 {{ education_back() }}
 <h1 class="page-title">Study</h1>
-<p class="page-subtitle">Upload a PDF to generate flashcards, build your deck, then quiz yourself card by card.</p>
 
 <div id="quiz-launcher" class="card study-quiz-launcher">
   <h2>Flashcard Quiz</h2>
@@ -46,7 +45,6 @@
 
 <div class="card study-ai-card">
   <h2>Generate from Notes</h2>
-  <p class="study-card-intro">Upload a PDF of your class notes and Studious will build flashcards from them.</p>
   <div class="study-ai-form">
     <label class="study-file-field">
       Notes PDF

@@ -4,49 +4,233 @@ body {
   font-weight: 400;
   line-height: 1.6;
   letter-spacing: 0.01em;
-  background: #0f172a;
+  background: #0f0a1a;
   color: #e2e8f0;
   -webkit-font-smoothing: antialiased;
 }
 
 :root {
-  --box-surface:
-    repeating-linear-gradient(
-      -45deg,
-      transparent,
-      transparent 3px,
-      rgba(255, 255, 255, 0.015) 3px,
-      rgba(255, 255, 255, 0.015) 4px
-    ),
-    radial-gradient(ellipse 120% 85% at 50% -20%, rgba(96, 165, 250, 0.1) 0%, transparent 55%),
-    linear-gradient(168deg, #1c2740 0%, #111827 42%, #0d1321 100%);
-  --box-surface-soft:
-    repeating-linear-gradient(
-      -45deg,
-      transparent,
-      transparent 3px,
-      rgba(255, 255, 255, 0.01) 3px,
-      rgba(255, 255, 255, 0.01) 4px
-    ),
-    radial-gradient(ellipse 100% 70% at 70% -10%, rgba(96, 165, 250, 0.06) 0%, transparent 50%),
-    linear-gradient(165deg, #171f31 0%, #0f172a 55%, #0c1220 100%);
-  --box-surface-accent:
-    repeating-linear-gradient(
-      -45deg,
-      transparent,
-      transparent 3px,
-      rgba(255, 255, 255, 0.018) 3px,
-      rgba(255, 255, 255, 0.018) 4px
-    ),
-    radial-gradient(ellipse 110% 80% at 50% -15%, rgba(59, 130, 246, 0.14) 0%, transparent 55%),
-    linear-gradient(168deg, #1e3a5f 0%, #172554 38%, #0f172a 100%);
-  --box-surface-hover:
-    radial-gradient(ellipse 100% 70% at 50% -10%, rgba(96, 165, 250, 0.12) 0%, transparent 50%),
-    linear-gradient(165deg, #1e293b 0%, #172033 100%);
+  --panel-opaque-fade: linear-gradient(
+    168deg,
+    rgba(48, 24, 78, 0.78) 0%,
+    rgba(26, 14, 46, 0.94) 40%,
+    rgba(14, 8, 28, 0.98) 100%
+  );
+  --panel-opaque-fade-soft: linear-gradient(
+    168deg,
+    rgba(40, 20, 66, 0.72) 0%,
+    rgba(22, 12, 40, 0.9) 45%,
+    rgba(12, 7, 24, 0.96) 100%
+  );
+  --panel-opaque-fade-accent: linear-gradient(
+    168deg,
+    rgba(56, 28, 90, 0.8) 0%,
+    rgba(32, 16, 58, 0.95) 42%,
+    rgba(18, 10, 34, 0.98) 100%
+  );
+  --panel-opaque-fade-hover: linear-gradient(
+    168deg,
+    rgba(52, 26, 84, 0.74) 0%,
+    rgba(30, 15, 52, 0.92) 100%
+  );
+  --panel-blur: blur(14px);
+  --panel-border: 1px solid rgba(167, 139, 250, 0.2);
+  --box-surface: var(--panel-opaque-fade);
+  --box-surface-soft: var(--panel-opaque-fade-soft);
+  --box-surface-accent: var(--panel-opaque-fade-accent);
+  --box-surface-hover: var(--panel-opaque-fade-hover);
+}
+
+.card,
+.tile,
+.score-box,
+.streak-box,
+.modal-content,
+.flashcard-item,
+.study-flashcard,
+.insight-card,
+.calendar-day:not(.empty),
+.panel-event-item,
+.grades-test-item,
+.assignment-item,
+.grade-result-box,
+.time-picker-box,
+.mood-btn:not(.selected),
+.focus-cta,
+.upcoming-sidebar,
+.dashboard-title-box,
+.dashboard-profile-box,
+.auth-card {
+  backdrop-filter: var(--panel-blur);
+  -webkit-backdrop-filter: var(--panel-blur);
 }
 
 .auth-body {
   min-height: 100vh;
+}
+
+.auth-shell {
+  min-height: 100vh;
+  overflow: hidden;
+  position: relative;
+}
+
+.animated-gradient-bg {
+  animation: auth-gradient-enter 2s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  position: fixed;
+  transform: scale(1.5);
+  z-index: 0;
+}
+
+.animated-gradient-bg__layer {
+  inset: 0;
+  position: absolute;
+}
+
+@keyframes auth-gradient-enter {
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.auth-shell .auth-page {
+  position: relative;
+  z-index: 1;
+}
+
+.auth-shell .cover-page {
+  background: transparent;
+  position: relative;
+  z-index: 1;
+}
+
+.auth-shell .auth-card {
+  backdrop-filter: var(--panel-blur);
+  background: var(--panel-opaque-fade);
+  border-color: rgba(167, 139, 250, 0.22);
+}
+
+.app-body .nav {
+  backdrop-filter: var(--panel-blur);
+  background: linear-gradient(
+    180deg,
+    rgba(36, 16, 62, 0.92) 0%,
+    rgba(22, 10, 40, 0.88) 100%
+  );
+  border-bottom: 1px solid rgba(167, 139, 250, 0.15);
+}
+
+/* Readable panels over animated app background */
+.app-body .card,
+.app-body .tile,
+.app-body .score-box,
+.app-body .streak-box,
+.app-body .insight-card,
+.app-body .modal-content,
+.app-body .focus-cta,
+.app-body .upcoming-sidebar,
+.app-body .dashboard-title-box,
+.app-body .dashboard-profile-box,
+.app-body .page-title,
+.app-body .health-greeting,
+.app-body .tiles-section > h2,
+.app-body .insights-section > h2 {
+  background: var(--panel-opaque-fade);
+  backdrop-filter: var(--panel-blur);
+  border: var(--panel-border);
+  border-radius: 14px;
+}
+
+.app-body .page-back,
+.app-body .insights-intro,
+.app-body .stats-panel,
+.app-body .status-text,
+.app-body .focus-timer-status,
+.app-body .study-progress,
+.app-body .study-swipe-hint,
+.app-body .study-ai-status,
+.app-body .empty-state,
+.app-body .focus-timer-display,
+.app-body .focus-elapsed-display,
+.app-body .focus-elapsed-label,
+.app-body .grade-result-box,
+.app-body .grades-needed-text,
+.app-body .study-quiz-summary {
+  background: var(--panel-opaque-fade-soft);
+  backdrop-filter: var(--panel-blur);
+  border: 1px solid rgba(167, 139, 250, 0.16);
+}
+
+.app-body .dashboard-hero h1,
+.app-body .profile-details {
+  background: none;
+  backdrop-filter: none;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.app-body .page-title,
+.app-body .health-greeting {
+  display: inline-block;
+  margin-bottom: 20px;
+  padding: 12px 18px;
+}
+
+.app-body .page-back {
+  border-radius: 10px;
+  padding: 8px 12px;
+}
+
+.app-body .tiles-section > h2,
+.app-body .insights-section > h2 {
+  border-radius: 12px;
+  display: inline-block;
+  margin-bottom: 16px;
+  padding: 10px 16px;
+}
+
+.app-body .insights-intro {
+  border-radius: 12px;
+  display: inline-block;
+  margin-bottom: 16px;
+  padding: 10px 14px;
+}
+
+.app-body .stats-panel,
+.app-body .status-text,
+.app-body .focus-timer-status,
+.app-body .study-progress,
+.app-body .study-swipe-hint,
+.app-body .study-ai-status,
+.app-body .empty-state {
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+.app-body .focus-timer-display,
+.app-body .focus-elapsed-display,
+.app-body .focus-elapsed-label {
+  border-radius: 12px;
+  display: inline-block;
+  padding: 8px 16px;
+}
+
+.app-body .focus-elapsed-label {
+  font-size: 0.8rem;
+  margin-bottom: 6px;
+  padding: 6px 12px;
+}
+
+.app-body .grade-result-box,
+.app-body .grades-needed-text,
+.app-body .study-quiz-summary {
+  border-radius: 10px;
+  padding: 10px 12px;
 }
 
 /* Cover / landing */
@@ -309,12 +493,34 @@ body {
 }
 
 .cover-title {
-  margin: 0 0 16px;
+  margin: 0 0 40px;
   font-size: clamp(2.5rem, 6vw, 3.75rem);
   font-weight: 600;
   letter-spacing: -0.03em;
   line-height: 1.1;
   color: #f8fafc;
+}
+
+.cover-title-typewriter .typewriter-text {
+  white-space: pre-line;
+}
+
+.typewriter-cursor {
+  animation: typewriter-cursor-pulse 0.8s step-end infinite;
+  color: #93c5fd;
+  font-weight: 400;
+  margin-left: 2px;
+}
+
+@keyframes typewriter-cursor-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
 }
 
 .cover-tagline {
@@ -389,7 +595,7 @@ body {
 }
 
 .auth-title {
-  margin: 0 0 8px;
+  margin: 0 0 24px;
   font-size: 1.75rem;
   font-weight: 600;
   color: #f1f5f9;
@@ -410,8 +616,12 @@ body {
 
 .auth-field-row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.auth-field-row .auth-field {
+  min-width: 0;
 }
 
 .auth-field {
@@ -427,6 +637,8 @@ body {
 }
 
 .auth-field input {
+  box-sizing: border-box;
+  width: 100%;
   padding: 12px 14px;
   border-radius: 10px;
   border: 1px solid #334155;
@@ -624,12 +836,30 @@ textarea {
 }
 
 .dashboard-hero {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
   padding: 8px 0 24px;
   min-height: 0;
+  width: fit-content;
+  max-width: 100%;
+}
+
+.dashboard-title-box,
+.dashboard-profile-box {
+  box-sizing: border-box;
+}
+
+.dashboard-title-box {
+  padding: 14px 20px;
+}
+
+.dashboard-profile-box {
+  padding: 16px 20px;
 }
 
 .dashboard-hero h1 {
-  margin: 0 0 28px;
+  margin: 0;
   font-size: clamp(2.25rem, 4vw, 3rem);
   font-weight: 600;
   letter-spacing: -0.03em;
@@ -641,7 +871,7 @@ textarea {
   display: flex;
   align-items: center;
   gap: 22px;
-  margin-bottom: 20px;
+  margin-bottom: 0;
 }
 
 .profile-avatar {
@@ -1086,8 +1316,9 @@ button:disabled {
 }
 
 .card {
-  background: var(--box-surface);
-  border: 2px solid #334155;
+  background: var(--panel-opaque-fade);
+  backdrop-filter: var(--panel-blur);
+  border: var(--panel-border);
   border-radius: 16px;
   padding: 24px;
   margin-top: 20px;
@@ -1520,8 +1751,9 @@ button:disabled {
 }
 
 .focus-session-pip-card {
-  background: linear-gradient(145deg, rgba(30, 41, 59, 0.96), rgba(15, 23, 42, 0.98));
-  border: 1px solid rgba(148, 163, 184, 0.25);
+  background: var(--panel-opaque-fade);
+  backdrop-filter: var(--panel-blur);
+  border: var(--panel-border);
   border-radius: 12px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
   min-width: 148px;
@@ -1613,8 +1845,8 @@ input {
 }
 
 .score-box, .streak-box {
-  background: var(--box-surface-soft);
-  border: 1px solid #334155;
+  background: var(--panel-opaque-fade-soft);
+  border: var(--panel-border);
   border-radius: 16px;
   padding: 24px;
   text-align: center;
@@ -1664,8 +1896,9 @@ input {
 }
 
 .tile {
-  background: var(--box-surface-soft);
-  border: 1px solid #334155;
+  background: var(--panel-opaque-fade-soft);
+  backdrop-filter: var(--panel-blur);
+  border: var(--panel-border);
   border-radius: 12px;
   padding: 20px;
   text-align: center;
@@ -1807,8 +2040,8 @@ input {
 }
 
 .modal-content {
-  background: var(--box-surface);
-  border: 1px solid #334155;
+  background: var(--panel-opaque-fade);
+  border: var(--panel-border);
   border-radius: 16px;
   padding: 32px;
   max-width: 400px;
@@ -2007,7 +2240,7 @@ input {
 .calendar-day.selected {
   border-color: #f59e0b;
   box-shadow: 0 0 0 1px #f59e0b;
-  background: #1e293b;
+  background: var(--panel-opaque-fade-accent);
 }
 
 .day-number {
@@ -2243,8 +2476,8 @@ input {
 }
 
 .time-picker-box:hover {
-  border-color: #60a5fa;
-  background: #1e293b;
+  border-color: #a78bfa;
+  background: var(--panel-opaque-fade-hover);
 }
 
 .time-picker-heading {

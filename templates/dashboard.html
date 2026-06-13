@@ -1,4 +1,7 @@
 {% extends "base.html" %}
+<<<<<<< HEAD
+{% block title %}Dashboard — Study Space{% endblock %}
+=======
 {% block title %}Dashboard — Studious{% endblock %}
 
 {% block background %}
@@ -11,27 +14,30 @@
 </div>
 {% endblock %}
 
+>>>>>>> perry2
 {% block content %}
 <div class="dashboard-layout">
   <section class="dashboard-main">
     <header class="dashboard-hero">
-      <h1>Study smarter, not longer.</h1>
-
-      <div class="dashboard-profile">
-        <button type="button" class="profile-avatar" id="profile-avatar-btn" aria-label="Change profile picture">
-          <img id="profile-picture" class="profile-picture hidden" alt="">
-          <span id="profile-placeholder" class="profile-placeholder" aria-hidden="true"></span>
-          <span class="profile-avatar-label">Change photo</span>
-        </button>
-        <input type="file" id="profile-picture-input" class="hidden" accept="image/*">
-
-        <div class="profile-details">
-          <p class="profile-hi">Hi, <span id="profile-first-name">there</span></p>
-          <p class="profile-full-name" id="profile-full-name">Your name</p>
-        </div>
+      <div class="dashboard-title-box">
+        <h1>Your all in one Study Hub</h1>
       </div>
 
-      <p class="dashboard-welcome-prompt">Welcome — what do you want to work on?</p>
+      <div class="dashboard-profile-box">
+        <div class="dashboard-profile">
+          <button type="button" class="profile-avatar" id="profile-avatar-btn" aria-label="Change profile picture">
+            <img id="profile-picture" class="profile-picture hidden" alt="">
+            <span id="profile-placeholder" class="profile-placeholder" aria-hidden="true"></span>
+            <span class="profile-avatar-label">Change photo</span>
+          </button>
+          <input type="file" id="profile-picture-input" class="hidden" accept="image/*">
+
+          <div class="profile-details">
+            <p class="profile-hi">Hi, <span id="profile-first-name">there</span></p>
+            <p class="profile-full-name" id="profile-full-name">Your name</p>
+          </div>
+        </div>
+      </div>
     </header>
 
     <div class="dashboard-section">

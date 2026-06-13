@@ -6,7 +6,7 @@
     <span class="logo-icon" aria-hidden="true">
       <img src="{{ url_for('static', filename='img/logo.png') }}" alt="" class="logo-img" width="40" height="40">
     </span>
-    <span class="logo-text">Studious_Nga</span>
+    <span class="logo-text">Study Space</span>
   </span>
 {% if link %}
 </a>
@@ -15,4 +15,26 @@
 
 {% macro education_back() -%}
 <a href="{{ url_for('education') }}" class="page-back">← Education</a>
+{%- endmacro %}
+
+{% macro auth_page_gradient(element_id='auth-gradient') %}
+<script src="{{ url_for('static', filename='js/animated-gradient-background.js') }}"></script>
+<script>
+  initAnimatedGradientBackground(document.getElementById('{{ element_id }}'), {
+    startingGap: 125,
+    breathing: true,
+    animationSpeed: 0.015,
+    breathingRange: 4,
+    gradientColors: [
+      '#0f0a1a',
+      '#2e1065',
+      '#7c3aed',
+      '#a855f7',
+      '#c084fc',
+      '#9333ea',
+      '#0f0a1a'
+    ],
+    gradientStops: [35, 50, 58, 68, 78, 88, 100]
+  });
+</script>
 {%- endmacro %}

@@ -1,12 +1,11 @@
 {% extends "base.html" %}
 {% from "macros.html" import education_back %}
-{% block title %}Grades — Studious{% endblock %}
+{% block title %}Grades — Study Space{% endblock %}
 {% block content %}
 <div class="grades-layout">
   <section class="grades-main">
     {{ education_back() }}
     <h1 class="page-title">Grades</h1>
-    <p class="page-subtitle">See assessments coming up from your calendar and calculate what you need to hit your target grade.</p>
 
     <div class="card grades-tests-card">
       <h2>Upcoming Assessments</h2>
@@ -28,7 +27,6 @@
   <aside class="grades-sidebar">
     <div class="card">
       <h2>Assignment Average</h2>
-      <p class="grades-card-intro">Add graded work to see your current class average.</p>
       <ul id="assignment-list" class="assignment-list"></ul>
       <p id="no-assignments" class="empty-state">No assignments added yet.</p>
 
@@ -48,7 +46,6 @@
 
     <div class="card">
       <h2>Final Grade Planner</h2>
-      <p class="grades-card-intro">Estimate your final grade or find the score you need on the exam.</p>
 
       <label class="grades-field">
         Current grade before final

@@ -1,3 +1,37 @@
+<<<<<<< HEAD
+{% extends "auth_base.html" %}
+{% from "macros.html" import logo_badge, auth_page_gradient %}
+{% block title %}Welcome — Study Space{% endblock %}
+{% block auth_page %}landing{% endblock %}
+{% block content %}
+<div class="auth-shell">
+  <div id="landing-gradient" class="animated-gradient-bg" aria-hidden="true"></div>
+  <div class="cover-page">
+    <div class="cover-inner">
+      <div class="cover-logo">{{ logo_badge() }}</div>
+      <h1 class="cover-title cover-title-typewriter" aria-label="Your All In One Study Hub">
+        <span id="landing-typewriter" class="typewriter-text"></span><span class="typewriter-cursor" aria-hidden="true">|</span>
+      </h1>
+      <div class="cover-actions">
+        <a href="{{ url_for('login') }}" class="btn primary cover-btn">Sign In</a>
+        <a href="{{ url_for('signup') }}" class="btn secondary cover-btn">Sign Up</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ auth_page_gradient('landing-gradient') }}
+<script src="{{ url_for('static', filename='js/typewriter-text.js') }}"></script>
+<script>
+  initTypewriter(document.getElementById('landing-typewriter'), {
+    text: 'Your All In One\nStudy Hub',
+    speed: 28,
+  });
+</script>
+{% endblock %}
+=======
 {% extends "auth_base.html" %}
 {% from "macros.html" import logo_badge %}
 {% block title %}Welcome — Studious{% endblock %}
@@ -26,3 +60,4 @@
 <script src="{{ url_for('static', filename='js/orb-bg.js') }}"></script>
 <script>initOrbBackground(document.getElementById('cover-page'));</script>
 {% endblock %}
+>>>>>>> perry2

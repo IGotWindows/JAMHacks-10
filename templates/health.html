@@ -1,20 +1,17 @@
 {% extends "base.html" %}
-{% block title %}Health — Studious{% endblock %}
+{% block title %}Health — Study Space{% endblock %}
 {% block content %}
 <h1 class="page-title">Health</h1>
 <p class="health-greeting" id="user-greeting">Good morning.</p>
-<p class="page-subtitle">Track sleep, hydration, and mood each day — and see how your habits line up with focus.</p>
 
 <div class="score-container">
   <div class="score-box">
     <h2>Wellness Score</h2>
     <div class="score-display" id="combined-score">0<span class="score-unit">/100</span></div>
-    <p class="score-description">A blend of focus time and daily wellness. Higher is better.</p>
   </div>
   <div class="streak-box">
     <h2>Logging Streak</h2>
     <div class="streak-display" id="streak-count">0 days</div>
-    <p class="streak-description">Log daily to keep your streak going.</p>
   </div>
 </div>
 
@@ -53,7 +50,6 @@
 
 <div class="insights-section">
   <h2>Your Patterns</h2>
-  <p class="insights-intro">Insights based on your recent logs:</p>
 
   <div class="insight-card" id="insight-sleep">
     <div class="insight-icon">😴</div>

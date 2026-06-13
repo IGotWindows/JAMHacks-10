@@ -7,7 +7,7 @@ from io import BytesIO
 
 from pypdf import PdfReader
 
-USER_AGENT = "Studious/1.0 (education app; local hackathon project)"
+USER_AGENT = "Study Space/1.0 (education app; local hackathon project)"
 STOPWORDS = {
     "about", "after", "also", "been", "being", "between", "during", "first",
     "from", "have", "into", "more", "most", "other", "some", "such", "than",
