@@ -1,7 +1,5 @@
 const GRADES_STORAGE_KEY = "studious_grades_data";
 
-const TEST_KEYWORDS = /\b(test|quiz|exam|midterm|final|assessment|psat|sat|act)\b/i;
-
 let gradesData = {
   manualTests: [],
   assignments: [],
@@ -25,45 +23,35 @@ function saveGradesData() {
   localStorage.setItem(GRADES_STORAGE_KEY, JSON.stringify(gradesData));
 }
 
-function isTestEvent(title) {
-  return TEST_KEYWORDS.test(title);
-}
-
-function getCalendarTests() {
+function getCalendarAssessments() {
   const dataEl = document.getElementById("calendar-init-data");
   if (!dataEl) return [];
 
   const initData = JSON.parse(dataEl.textContent);
-  const allEvents = loadAllEvents();
-  migrateAllEvents(allEvents);
-  applyServerSampleEvents(allEvents, initData);
-
-  return getUpcomingEvents(allEvents, { weekOnly: false })
-    .filter((entry) => isTestEvent(entry.event.title))
-    .map((entry) => ({
-      id: `cal-${entry.dateKey}-${entry.event.title}`,
-      title: entry.event.title,
-      date: entry.dateKey,
-      dateLabel: entry.dateLabel,
-      time: formatEventTime(entry.event),
-      source: "calendar",
-    }));
+  return getCalendarAssessmentEvents(initData).map((entry) => ({
+    id: `cal-${entry.dateKey}-${entry.event.title}`,
+    title: entry.event.title,
+    date: entry.dateKey,
+    dateLabel: entry.dateLabel,
+    time: formatEventTime(entry.event),
+    source: "calendar",
+  }));
 }
 
-function mergeTests(calendarTests, manualTests) {
-  const merged = [...calendarTests];
-  const seen = new Set(calendarTests.map((t) => `${t.date}|${t.title.toLowerCase()}`));
+function mergeAssessments(calendarAssessments, manualAssessments) {
+  const merged = [...calendarAssessments];
+  const seen = new Set(calendarAssessments.map((item) => `${item.date}|${item.title.toLowerCase()}`));
 
-  manualTests.forEach((test) => {
-    const key = `${test.date}|${test.title.toLowerCase()}`;
+  manualAssessments.forEach((assessment) => {
+    const key = `${assessment.date}|${assessment.title.toLowerCase()}`;
     if (seen.has(key)) return;
     seen.add(key);
     merged.push({
-      id: test.id,
-      title: test.title,
-      date: test.date,
-      dateLabel: formatManualDateLabel(test.date),
-      time: test.course || "Added manually",
+      id: assessment.id,
+      title: assessment.title,
+      date: assessment.date,
+      dateLabel: formatManualDateLabel(assessment.date),
+      time: assessment.course || "Added manually",
       source: "manual",
     });
   });
@@ -76,22 +64,22 @@ function formatManualDateLabel(dateStr) {
   return formatDateLabel(new Date(year, month - 1, day));
 }
 
-function renderUpcomingTests() {
-  const list = document.getElementById("upcoming-tests-list");
-  const emptyMsg = document.getElementById("no-upcoming-tests");
+function renderUpcomingAssessments() {
+  const list = document.getElementById("upcoming-assessments-list");
+  const emptyMsg = document.getElementById("no-upcoming-assessments");
   if (!list || !emptyMsg) return;
 
-  const tests = mergeTests(getCalendarTests(), gradesData.manualTests);
+  const assessments = mergeAssessments(getCalendarAssessments(), gradesData.manualTests);
   list.innerHTML = "";
 
-  if (tests.length === 0) {
+  if (assessments.length === 0) {
     emptyMsg.classList.remove("hidden");
     return;
   }
 
   emptyMsg.classList.add("hidden");
 
-  tests.forEach((test) => {
+  assessments.forEach((assessment) => {
     const item = document.createElement("li");
     item.className = "grades-test-item";
 
@@ -100,28 +88,28 @@ function renderUpcomingTests() {
 
     const title = document.createElement("span");
     title.className = "grades-test-title";
-    title.textContent = test.title;
+    title.textContent = assessment.title;
 
     const meta = document.createElement("span");
     meta.className = "grades-test-meta";
-    meta.textContent = `${test.dateLabel}${test.time ? ` · ${test.time}` : ""}`;
+    meta.textContent = `${assessment.dateLabel}${assessment.time ? ` · ${assessment.time}` : ""}`;
 
     main.appendChild(title);
     main.appendChild(meta);
 
     const badge = document.createElement("span");
-    badge.className = `grades-test-badge ${test.source === "calendar" ? "badge-calendar" : "badge-manual"}`;
-    badge.textContent = test.source === "calendar" ? "Calendar" : "Manual";
+    badge.className = `grades-test-badge ${assessment.source === "calendar" ? "badge-calendar" : "badge-manual"}`;
+    badge.textContent = assessment.source === "calendar" ? "Calendar" : "Manual";
 
     item.appendChild(main);
     item.appendChild(badge);
 
-    if (test.source === "manual") {
+    if (assessment.source === "manual") {
       const removeBtn = document.createElement("button");
       removeBtn.type = "button";
       removeBtn.className = "btn secondary btn-small grades-remove-btn";
       removeBtn.textContent = "Remove";
-      removeBtn.addEventListener("click", () => removeManualTest(test.id));
+      removeBtn.addEventListener("click", () => removeManualAssessment(assessment.id));
       item.appendChild(removeBtn);
     }
 
@@ -129,17 +117,17 @@ function renderUpcomingTests() {
   });
 }
 
-function addManualTest() {
-  const titleInput = document.getElementById("test-title");
-  const dateInput = document.getElementById("test-date");
-  const courseInput = document.getElementById("test-course");
+function addManualAssessment() {
+  const titleInput = document.getElementById("assessment-title");
+  const dateInput = document.getElementById("assessment-date");
+  const courseInput = document.getElementById("assessment-course");
 
   const title = titleInput.value.trim();
   const date = dateInput.value;
   const course = courseInput.value.trim();
 
   if (!title || !date) {
-    alert("Enter a test name and date.");
+    alert("Enter an assessment name and date.");
     return;
   }
 
@@ -155,13 +143,13 @@ function addManualTest() {
   dateInput.value = "";
   courseInput.value = "";
   titleInput.focus();
-  renderUpcomingTests();
+  renderUpcomingAssessments();
 }
 
-function removeManualTest(id) {
-  gradesData.manualTests = gradesData.manualTests.filter((test) => test.id !== id);
+function removeManualAssessment(id) {
+  gradesData.manualTests = gradesData.manualTests.filter((assessment) => assessment.id !== id);
   saveGradesData();
-  renderUpcomingTests();
+  renderUpcomingAssessments();
 }
 
 function calculateAssignmentGrade() {
@@ -327,8 +315,22 @@ function calculateFinalGrade() {
 
 document.addEventListener("DOMContentLoaded", () => {
   loadGradesData();
-  renderUpcomingTests();
+  renderUpcomingAssessments();
   renderAssignments();
+
+  window.addEventListener("pageshow", () => {
+    renderUpcomingAssessments();
+  });
+
+  window.addEventListener("studious-calendar-updated", () => {
+    renderUpcomingAssessments();
+  });
+
+  window.addEventListener("storage", (event) => {
+    if (event.key === "studious-calendar-events") {
+      renderUpcomingAssessments();
+    }
+  });
 
   const currentGradeInput = document.getElementById("final-current-grade");
   if (currentGradeInput) {

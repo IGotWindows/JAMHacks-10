@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block title %}Study — Studious{% endblock %}
 {% block content %}
+<div class="study-page">
 <h1 class="page-title">Study</h1>
 <p class="page-subtitle">Upload a PDF to generate flashcards, build your deck, then quiz yourself card by card.</p>
 
@@ -21,16 +22,14 @@
   </div>
 
   <div id="quiz-card-view">
-    <button type="button" id="study-card" class="study-flashcard" aria-live="polite">
-      <span class="study-flashcard-label" id="study-card-label">Question</span>
-      <p id="study-card-text" class="study-flashcard-text"></p>
-      <span id="study-card-hint" class="study-flashcard-hint">Tap the card to reveal the answer</span>
-    </button>
-
-    <div class="study-mode-actions">
-      <button type="button" id="study-prev-btn" class="btn secondary">Previous</button>
-      <button type="button" id="study-next-btn" class="btn primary">Next</button>
+    <div class="study-card-swipe-wrap">
+      <button type="button" id="study-card" class="study-flashcard" aria-live="polite">
+        <span class="study-flashcard-label" id="study-card-label">Question</span>
+        <p id="study-card-text" class="study-flashcard-text"></p>
+        <span id="study-card-hint" class="study-flashcard-hint">Tap to reveal the answer</span>
+      </button>
     </div>
+    <p class="study-swipe-hint">Swipe left for next · swipe right for previous</p>
   </div>
 
   <div id="quiz-complete-view" class="study-quiz-complete hidden">
@@ -57,7 +56,7 @@
     </label>
     <button type="button" id="generate-flashcards-btn" class="btn primary">Generate Deck</button>
   </div>
-  <p id="ai-status" class="study-ai-status">Upload a text-based PDF (not a photo scan). Add OPENAI_API_KEY to a .env file for smarter AI cards.</p>
+  <p id="ai-status" class="study-ai-status">Upload a text-based PDF (not a photo scan). Add GEMINI_API_KEY to a .env file for AI-generated cards.</p>
 </div>
 
 <div class="card">
@@ -74,6 +73,7 @@
   </div>
   <ul id="flashcard-list" class="flashcard-list"></ul>
   <p id="no-flashcards" class="empty-state">No flashcards yet. Generate a deck or add your first one above.</p>
+</div>
 </div>
 {% endblock %}
 

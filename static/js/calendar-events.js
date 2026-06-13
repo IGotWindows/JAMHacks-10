@@ -11,12 +11,13 @@ function getMonthKey(year, month) {
 
 function normalizeEvent(event) {
   if (typeof event === "string") {
-    return { title: event, startTime: "", endTime: "" };
+    return { title: event, startTime: "", endTime: "", isAssessment: false };
   }
   return {
     title: event.title || "",
     startTime: event.startTime || "",
     endTime: event.endTime || "",
+    isAssessment: Boolean(event.isAssessment ?? event.isEvaluation),
   };
 }
 
@@ -87,8 +88,24 @@ function migrateAllEvents(allEvents) {
   Object.keys(allEvents).forEach((monthKey) => {
     Object.keys(allEvents[monthKey]).forEach((day) => {
       const migrated = allEvents[monthKey][day].map((event) => {
-        if (typeof event === "string") changed = true;
-        return normalizeEvent(event);
+        if (typeof event === "string") {
+          changed = true;
+          return normalizeEvent(event);
+        }
+        const normalized = normalizeEvent(event);
+        if (
+          typeof event === "string" ||
+          !Object.prototype.hasOwnProperty.call(event, "isAssessment") ||
+          Object.prototype.hasOwnProperty.call(event, "isEvaluation")
+        ) {
+          changed = true;
+        }
+        return {
+          title: normalized.title,
+          startTime: normalized.startTime,
+          endTime: normalized.endTime,
+          isAssessment: normalized.isAssessment,
+        };
       });
       allEvents[monthKey][day] = migrated;
     });
@@ -105,13 +122,33 @@ function applyServerSampleEvents(allEvents, initData) {
     allEvents[monthKey] = {};
   }
 
-  Object.entries(initData.events).forEach(([day, events]) => {
+  let changed = false;
+
+  Object.entries(initData.events).forEach(([day, sampleEvents]) => {
+    const normalizedSamples = sampleEvents.map(normalizeEvent);
+    const sampleFlags = new Map(
+      normalizedSamples.map((event) => [event.title.toLowerCase(), event.isAssessment])
+    );
+
     if (!allEvents[monthKey][day]?.length) {
-      allEvents[monthKey][day] = events.map(normalizeEvent);
+      allEvents[monthKey][day] = normalizedSamples;
+      changed = true;
+      return;
     }
+
+    allEvents[monthKey][day] = allEvents[monthKey][day].map((event) => {
+      const normalized = normalizeEvent(event);
+      if (sampleFlags.get(normalized.title.toLowerCase()) && !normalized.isAssessment) {
+        changed = true;
+        return { ...normalized, isAssessment: true };
+      }
+      return normalized;
+    });
   });
 
-  saveAllEvents(allEvents);
+  if (changed) {
+    saveAllEvents(allEvents);
+  }
 }
 
 function loadAllEvents() {
@@ -122,8 +159,16 @@ function loadAllEvents() {
   }
 }
 
+function localDateKey(date) {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
+}
+
 function saveAllEvents(allEvents) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(allEvents));
+  window.dispatchEvent(new CustomEvent("studious-calendar-updated"));
 }
 
 function getEndOfWeekSunday(fromDate = new Date()) {
@@ -139,21 +184,28 @@ function getUpcomingEvents(allEvents, options = {}) {
   const { weekOnly = false } = options;
   const today = new Date();
   today.setHours(0, 0, 0, 0);
+  const todayKey = localDateKey(today);
   const weekEnd = weekOnly ? getEndOfWeekSunday(today) : null;
+  const weekEndKey = weekEnd ? localDateKey(weekEnd) : null;
   const upcoming = [];
 
   Object.entries(allEvents).forEach(([monthKey, days]) => {
     const [year, month] = monthKey.split("-").map(Number);
+    if (!year || !month) return;
+
     Object.entries(days).forEach(([day, events]) => {
       const eventDate = new Date(year, month - 1, Number(day));
+      if (Number.isNaN(eventDate.getTime())) return;
       eventDate.setHours(0, 0, 0, 0);
-      if (eventDate < today) return;
-      if (weekEnd && eventDate > weekEnd) return;
+
+      const eventDateKey = localDateKey(eventDate);
+      if (eventDateKey < todayKey) return;
+      if (weekEndKey && eventDateKey > weekEndKey) return;
 
       sortEvents(events).forEach((event) => {
         upcoming.push({
           date: eventDate,
-          dateKey: eventDate.toISOString().slice(0, 10),
+          dateKey: eventDateKey,
           dateLabel: formatDateLabel(eventDate),
           event: normalizeEvent(event),
         });
@@ -166,6 +218,18 @@ function getUpcomingEvents(allEvents, options = {}) {
     if (dateDiff !== 0) return dateDiff;
     return eventSortKey(a.event).localeCompare(eventSortKey(b.event));
   });
+}
+
+function getCalendarAssessmentEvents(initData) {
+  const allEvents = loadAllEvents();
+  migrateAllEvents(allEvents);
+  if (initData) {
+    applyServerSampleEvents(allEvents, initData);
+  }
+
+  return getUpcomingEvents(allEvents, { weekOnly: false }).filter(
+    (entry) => normalizeEvent(entry.event).isAssessment
+  );
 }
 
 function groupUpcomingByDate(upcomingEvents) {
