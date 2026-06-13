@@ -9,6 +9,42 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+:root {
+  --box-surface:
+    repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 3px,
+      rgba(255, 255, 255, 0.015) 3px,
+      rgba(255, 255, 255, 0.015) 4px
+    ),
+    radial-gradient(ellipse 120% 85% at 50% -20%, rgba(96, 165, 250, 0.1) 0%, transparent 55%),
+    linear-gradient(168deg, #1c2740 0%, #111827 42%, #0d1321 100%);
+  --box-surface-soft:
+    repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 3px,
+      rgba(255, 255, 255, 0.01) 3px,
+      rgba(255, 255, 255, 0.01) 4px
+    ),
+    radial-gradient(ellipse 100% 70% at 70% -10%, rgba(96, 165, 250, 0.06) 0%, transparent 50%),
+    linear-gradient(165deg, #171f31 0%, #0f172a 55%, #0c1220 100%);
+  --box-surface-accent:
+    repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 3px,
+      rgba(255, 255, 255, 0.018) 3px,
+      rgba(255, 255, 255, 0.018) 4px
+    ),
+    radial-gradient(ellipse 110% 80% at 50% -15%, rgba(59, 130, 246, 0.14) 0%, transparent 55%),
+    linear-gradient(168deg, #1e3a5f 0%, #172554 38%, #0f172a 100%);
+  --box-surface-hover:
+    radial-gradient(ellipse 100% 70% at 50% -10%, rgba(96, 165, 250, 0.12) 0%, transparent 50%),
+    linear-gradient(165deg, #1e293b 0%, #172033 100%);
+}
+
 .auth-body {
   min-height: 100vh;
 }
@@ -368,7 +404,7 @@ textarea {
   padding: 0;
   border: 2px dashed #475569;
   border-radius: 50%;
-  background: #1e293b;
+  background: var(--box-surface-soft);
   cursor: pointer;
   overflow: hidden;
   transition: border-color 0.15s;
@@ -499,9 +535,54 @@ textarea {
   margin-bottom: 14px;
 }
 
+.education-page {
+  text-align: center;
+}
+
+.education-page .page-title {
+  font-size: clamp(2.25rem, 4vw, 2.85rem);
+}
+
+.education-page .page-subtitle {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 40rem;
+  font-size: 1.2rem;
+  line-height: 1.75;
+  color: #c4ced9;
+}
+
 .education-links {
-  max-width: 960px;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  margin: 0 auto;
+  grid-template-columns: repeat(3, minmax(0, 280px));
+  justify-content: center;
+  gap: 22px;
+}
+
+.education-page .quick-link.card {
+  margin-top: 0;
+  padding: 36px 28px;
+  min-height: 210px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.education-page .quick-link h2 {
+  font-size: 1.35rem;
+  color: #f1f5f9;
+}
+
+.education-page .quick-link p {
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: #c4ced9;
+}
+
+.education-page .quick-link-icon {
+  font-size: 1.85rem;
+  margin-bottom: 14px;
 }
 
 .quick-link {
@@ -540,8 +621,50 @@ textarea {
 .upcoming-sidebar {
   margin-top: 0;
   padding: 28px 24px;
+}
+
+.dashboard-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
   position: sticky;
   top: 24px;
+}
+
+.focus-cta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  margin-top: 0;
+  padding: 36px 24px;
+  min-height: 200px;
+  text-decoration: none;
+  text-align: center;
+  background: var(--box-surface-accent);
+  border-color: #3b82f6;
+  transition: border-color 0.15s, transform 0.15s, box-shadow 0.2s;
+}
+
+.focus-cta:hover {
+  border-color: #60a5fa;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(37, 99, 235, 0.25);
+}
+
+.focus-cta-icon {
+  display: block;
+  width: 72px;
+  height: 72px;
+}
+
+.focus-cta-label {
+  font-size: 1.3rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: #f8fafc;
+  letter-spacing: -0.01em;
 }
 
 .sidebar-title,
@@ -648,9 +771,18 @@ textarea {
     grid-template-columns: 1fr;
   }
 
+  .education-links {
+    grid-template-columns: minmax(0, 340px);
+    justify-content: center;
+  }
+
   .upcoming-sidebar {
     position: static;
+  }
+
+  .dashboard-sidebar {
     order: 3;
+    position: static;
   }
 
   .dashboard-main {
@@ -706,8 +838,8 @@ button:disabled {
 }
 
 .card {
-  background: #111827;
-  border: 1px solid #334155;
+  background: var(--box-surface);
+  border: 2px solid #334155;
   border-radius: 16px;
   padding: 24px;
   margin-top: 20px;
@@ -784,7 +916,7 @@ button:disabled {
   gap: 12px;
   padding: 14px;
   margin-bottom: 10px;
-  background: #0f172a;
+  background: var(--box-surface-soft);
   border: 1px solid #334155;
   border-radius: 10px;
 }
@@ -964,7 +1096,7 @@ button:disabled {
   padding: 32px 28px;
   border: 2px solid #334155;
   border-radius: 16px;
-  background: linear-gradient(180deg, #111827 0%, #0f172a 100%);
+  background: var(--box-surface);
   color: #e2e8f0;
   cursor: pointer;
   text-align: center;
@@ -979,7 +1111,7 @@ button:disabled {
 
 .study-flashcard.is-revealed {
   border-color: #2563eb;
-  background: linear-gradient(180deg, #172554 0%, #0f172a 100%);
+  background: var(--box-surface-accent);
 }
 
 .study-flashcard-label {
@@ -1107,7 +1239,7 @@ input {
 }
 
 .score-box, .streak-box {
-  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  background: var(--box-surface-soft);
   border: 1px solid #334155;
   border-radius: 16px;
   padding: 24px;
@@ -1158,7 +1290,7 @@ input {
 }
 
 .tile {
-  background: #111827;
+  background: var(--box-surface-soft);
   border: 1px solid #334155;
   border-radius: 12px;
   padding: 20px;
@@ -1243,7 +1375,7 @@ input {
 }
 
 .insight-card {
-  background: #111827;
+  background: var(--box-surface-soft);
   border-left: 4px solid #3b82f6;
   border-radius: 8px;
   padding: 20px;
@@ -1293,7 +1425,7 @@ input {
 }
 
 .modal-content {
-  background: #111827;
+  background: var(--box-surface);
   border: 1px solid #334155;
   border-radius: 16px;
   padding: 32px;
@@ -1345,7 +1477,7 @@ input {
 }
 
 .mood-btn {
-  background: #1e293b;
+  background: var(--box-surface-soft);
   border: 2px solid #334155;
   border-radius: 12px;
   padding: 12px;
@@ -1408,6 +1540,17 @@ input {
   margin-top: 0;
 }
 
+.calendar-page .page-subtitle {
+  max-width: none;
+  white-space: nowrap;
+}
+
+@media (max-width: 720px) {
+  .calendar-page .page-subtitle {
+    white-space: normal;
+  }
+}
+
 .calendar-toolbar {
   display: flex;
   align-items: center;
@@ -1441,9 +1584,12 @@ input {
   font-size: 0.85rem;
 }
 
+.calendar-day:not(.empty) {
+  background: var(--box-surface-soft);
+}
+
 .calendar-day {
   min-height: 100px;
-  background: #0f172a;
   border: 1px solid #334155;
   border-radius: 10px;
   padding: 8px;
@@ -1453,7 +1599,7 @@ input {
 
 .calendar-day:not(.empty):hover {
   border-color: #60a5fa;
-  background: #1e293b;
+  background: var(--box-surface-hover);
 }
 
 .calendar-day.empty {
@@ -1547,7 +1693,7 @@ input {
   gap: 10px;
   padding: 12px;
   margin-bottom: 8px;
-  background: #0f172a;
+  background: var(--box-surface-soft);
   border: 1px solid #334155;
   border-radius: 10px;
 }
@@ -1660,7 +1806,7 @@ input {
   padding: 10px 12px;
   border: 1px solid #475569;
   border-radius: 10px;
-  background: #0f172a;
+  background: var(--box-surface-soft);
 }
 
 .time-picker-box:hover {
@@ -1828,7 +1974,7 @@ input {
   flex-wrap: wrap;
   padding: 14px;
   margin-bottom: 10px;
-  background: #0f172a;
+  background: var(--box-surface-soft);
   border: 1px solid #334155;
   border-radius: 10px;
 }
@@ -1905,7 +2051,7 @@ input {
 .grade-result-box {
   margin-top: 16px;
   padding: 16px;
-  background: #0f172a;
+  background: var(--box-surface-soft);
   border: 1px solid #334155;
   border-radius: 12px;
   text-align: center;
@@ -1951,4 +2097,27 @@ input {
   .grades-form-grid {
     grid-template-columns: 1fr;
   }
+}
+
+.flashcard-item,
+.score-box,
+.streak-box,
+.tile,
+.modal-content,
+.calendar-day,
+.panel-event-item,
+.grades-test-item,
+.assignment-item,
+.grade-result-box,
+.time-picker-box {
+  border-width: 2px;
+}
+
+.study-flashcard,
+.mood-btn {
+  border-width: 3px;
+}
+
+.profile-avatar {
+  border-width: 3px;
 }
