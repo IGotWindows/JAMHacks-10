@@ -49,6 +49,51 @@ body {
   min-height: 100vh;
 }
 
+.auth-shell {
+  min-height: 100vh;
+  overflow: hidden;
+  position: relative;
+}
+
+.animated-gradient-bg {
+  animation: auth-gradient-enter 2s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  position: fixed;
+  transform: scale(1.5);
+  z-index: 0;
+}
+
+.animated-gradient-bg__layer {
+  inset: 0;
+  position: absolute;
+}
+
+@keyframes auth-gradient-enter {
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.auth-shell .auth-page {
+  position: relative;
+  z-index: 1;
+}
+
+.auth-shell .cover-page {
+  background: transparent;
+  position: relative;
+  z-index: 1;
+}
+
+.auth-shell .auth-card {
+  backdrop-filter: blur(14px);
+  background: rgba(15, 23, 42, 0.82);
+  border-color: rgba(148, 163, 184, 0.2);
+}
+
 /* Cover / landing */
 .cover-page {
   min-height: 100vh;
