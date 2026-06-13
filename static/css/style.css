@@ -315,6 +315,28 @@ button:disabled {
   gap: 20px;
 }
 
+.cam-wrap {
+  position: relative;
+  display: block;
+  width: 100%;
+}
+
+.cam-wrap video,
+.cam-wrap canvas {
+  display: block;
+  width: 100%;
+  border-radius: 12px;
+}
+
+.cam-wrap canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  pointer-events: none;
+  background: transparent;
+}
+
 @media (max-width: 768px) {
   .focus-grid {
     grid-template-columns: 1fr;
@@ -324,6 +346,25 @@ button:disabled {
 .status-text {
   color: #94a3b8;
   margin: 12px 0 0;
+}
+
+.stats-panel {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 12px 0 8px 0;
+}
+
+.stats-panel .stat {
+  background: rgba(255,255,255,0.03);
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: #cbd5e1;
+}
+
+.stats-panel .stat strong {
+  color: #e2e8f0;
 }
 
 .flashcard-list {
@@ -608,7 +649,6 @@ button:disabled {
 
 video {
   width: 100%;
-  max-width: 400px;
   border-radius: 12px;
   background: black;
 }

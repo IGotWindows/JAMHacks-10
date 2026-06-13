@@ -16,12 +16,28 @@
 
   <div class="card">
     <h2>Webcam</h2>
-    <video id="cam" autoplay playsinline muted></video>
+    <div class="cam-wrap">
+      <video id="cam" autoplay playsinline muted></video>
+      <canvas id="overlay"></canvas>
+    </div>
     <p id="status" class="status-text">Camera off</p>
+
+    <div class="stats-panel">
+      <div class="stat"><strong>Looking:</strong> <span id="stat-looking">—</span></div>
+      <div class="stat"><strong>Face present:</strong> <span id="stat-face-seconds">0s</span></div>
+      <div class="stat"><strong>Face size:</strong> <span id="stat-face-size">0%</span></div>
+      <div class="stat"><strong>Movement:</strong> <span id="stat-movement">0</span></div>
+      <div class="stat"><strong>Focus score:</strong> <span id="stat-focus-score">0</span></div>
+    </div>
+
     <div class="hero-buttons">
       <button class="btn primary" onclick="startCamera()">Turn On</button>
       <button class="btn secondary" onclick="closeCamera()">Turn Off</button>
     </div>
   </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script type="module" src="{{ url_for('static', filename='js/focus.js') }}"></script>
 {% endblock %}
