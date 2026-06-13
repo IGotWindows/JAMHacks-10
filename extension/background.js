@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:5001";
+const BASE_URL = "http://localhost:5000";
 
 // Track the widget window ID so we don't open duplicates
 let widgetWindowId = null;

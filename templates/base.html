@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body data-require-auth="true" data-page="{{ request.endpoint }}">
+  {% block background %}{% endblock %}
   <nav class="nav">
     {{ logo_badge(url_for('dashboard')) }}
     <div class="links">
