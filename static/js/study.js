@@ -6,6 +6,12 @@ let studyIndex = 0;
 let studyRevealed = false;
 let quizActive = false;
 
+const SWIPE_THRESHOLD = 56;
+let swipeStartX = 0;
+let swipeCurrentX = 0;
+let isDragging = false;
+let didDrag = false;
+
 function loadFlashcards() {
   try {
     const stored = JSON.parse(localStorage.getItem(FLASHCARDS_STORAGE_KEY));
@@ -157,7 +163,7 @@ function showQuizComplete() {
   if (countEl) countEl.textContent = String(quizCards.length);
 }
 
-function renderStudyCard() {
+function renderStudyCard(enterFrom = null) {
   if (!quizActive || quizCards.length === 0) return;
 
   const card = quizCards[studyIndex];
@@ -166,52 +172,138 @@ function renderStudyCard() {
   const textEl = document.getElementById("study-card-text");
   const hintEl = document.getElementById("study-card-hint");
   const cardBtn = document.getElementById("study-card");
-  const nextBtn = document.getElementById("study-next-btn");
-  const prevBtn = document.getElementById("study-prev-btn");
 
-  if (!card || !progressEl || !labelEl || !textEl || !hintEl || !cardBtn || !nextBtn || !prevBtn) {
+  if (!card || !progressEl || !labelEl || !textEl || !hintEl || !cardBtn) {
     return;
   }
+
+  resetCardTransform(cardBtn);
+  cardBtn.classList.remove("slide-in-from-left", "slide-in-from-right");
+  if (enterFrom === "left") cardBtn.classList.add("slide-in-from-left");
+  if (enterFrom === "right") cardBtn.classList.add("slide-in-from-right");
 
   progressEl.textContent = `Card ${studyIndex + 1} of ${quizCards.length}`;
   labelEl.textContent = studyRevealed ? "Answer" : "Question";
   textEl.textContent = studyRevealed ? card.answer : card.question;
   hintEl.textContent = studyRevealed
-    ? "Press Next to continue"
-    : "Tap the card to reveal the answer";
+    ? "Tap to show the question"
+    : "Tap to reveal the answer";
 
   cardBtn.classList.toggle("is-revealed", studyRevealed);
-  nextBtn.disabled = false;
-  nextBtn.textContent = studyIndex === quizCards.length - 1 ? "Finish" : "Next";
-  prevBtn.disabled = studyIndex === 0;
 }
 
-function revealStudyCard() {
-  if (!quizActive || quizCards.length === 0 || studyRevealed) return;
-  studyRevealed = true;
+function resetCardTransform(cardBtn) {
+  const card = cardBtn || document.getElementById("study-card");
+  if (!card) return;
+  card.style.transform = "";
+  card.style.opacity = "";
+  card.style.transition = "";
+}
+
+function toggleStudyCard() {
+  if (!quizActive || quizCards.length === 0) return;
+  studyRevealed = !studyRevealed;
   renderStudyCard();
 }
 
-function nextStudyCard(event) {
-  event?.stopPropagation();
+function goToStudyCard(offset, enterFrom = null) {
   if (!quizActive || quizCards.length === 0) return;
 
-  if (studyIndex < quizCards.length - 1) {
-    studyIndex += 1;
-    studyRevealed = false;
-    renderStudyCard();
+  const nextIndex = studyIndex + offset;
+  if (nextIndex < 0) return;
+
+  if (nextIndex >= quizCards.length) {
+    showQuizComplete();
     return;
   }
 
-  showQuizComplete();
+  studyIndex = nextIndex;
+  studyRevealed = false;
+  renderStudyCard(enterFrom);
 }
 
-function previousStudyCard(event) {
-  event?.stopPropagation();
-  if (!quizActive || quizCards.length === 0 || studyIndex === 0) return;
-  studyIndex -= 1;
-  studyRevealed = false;
-  renderStudyCard();
+function animateCardSwipe(direction) {
+  const cardBtn = document.getElementById("study-card");
+  if (!cardBtn) return;
+
+  const offScreen = direction < 0 ? -window.innerWidth : window.innerWidth;
+  cardBtn.style.transition = "transform 0.22s ease, opacity 0.22s ease";
+  cardBtn.style.transform = `translateX(${offScreen}px) rotate(${direction * 8}deg)`;
+  cardBtn.style.opacity = "0";
+
+  window.setTimeout(() => {
+    resetCardTransform(cardBtn);
+    if (direction < 0) {
+      goToStudyCard(1, "right");
+    } else {
+      goToStudyCard(-1, "left");
+    }
+  }, 220);
+}
+
+function initStudyCardSwipe() {
+  const cardBtn = document.getElementById("study-card");
+  if (!cardBtn) return;
+
+  const onStart = (clientX) => {
+    if (!quizActive) return;
+    isDragging = true;
+    didDrag = false;
+    swipeStartX = clientX;
+    swipeCurrentX = 0;
+    cardBtn.classList.add("is-dragging");
+    resetCardTransform(cardBtn);
+  };
+
+  const onMove = (clientX) => {
+    if (!isDragging) return;
+    swipeCurrentX = clientX - swipeStartX;
+    if (Math.abs(swipeCurrentX) > 8) didDrag = true;
+    const atFirst = studyIndex === 0 && swipeCurrentX > 0;
+    const resistance = atFirst ? 0.35 : 1;
+    const x = swipeCurrentX * resistance;
+    cardBtn.style.transform = `translateX(${x}px) rotate(${x * 0.03}deg)`;
+    cardBtn.style.opacity = String(Math.max(0.55, 1 - Math.abs(x) / 420));
+  };
+
+  const onEnd = () => {
+    if (!isDragging) return;
+    isDragging = false;
+    cardBtn.classList.remove("is-dragging");
+
+    if (swipeCurrentX < -SWIPE_THRESHOLD) {
+      animateCardSwipe(-1);
+    } else if (swipeCurrentX > SWIPE_THRESHOLD && studyIndex > 0) {
+      animateCardSwipe(1);
+    } else {
+      resetCardTransform(cardBtn);
+    }
+
+    swipeCurrentX = 0;
+  };
+
+  cardBtn.addEventListener("pointerdown", (event) => {
+    if (event.button !== 0) return;
+    cardBtn.setPointerCapture(event.pointerId);
+    onStart(event.clientX);
+  });
+
+  cardBtn.addEventListener("pointermove", (event) => {
+    if (!isDragging) return;
+    onMove(event.clientX);
+  });
+
+  cardBtn.addEventListener("pointerup", onEnd);
+  cardBtn.addEventListener("pointercancel", onEnd);
+
+  cardBtn.addEventListener("click", (event) => {
+    if (didDrag) {
+      didDrag = false;
+      event.preventDefault();
+      return;
+    }
+    toggleStudyCard();
+  });
 }
 
 function addFlashcard() {
@@ -302,7 +394,7 @@ async function generateFlashcards() {
     saveFlashcards();
     renderFlashcards();
 
-    if (data.source === "openai") {
+    if (data.source === "gemini" || data.source === "openai") {
       statusEl.textContent = `Added ${generated.length} AI-generated cards from ${file.name}. Hit Start Quiz when you're ready.`;
     } else {
       statusEl.textContent = `Added ${generated.length} cards from ${file.name}. Hit Start Quiz when you're ready.`;
@@ -325,27 +417,26 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("end-quiz-btn")?.addEventListener("click", endQuiz);
   document.getElementById("finish-quiz-btn")?.addEventListener("click", endQuiz);
   document.getElementById("restart-quiz-btn")?.addEventListener("click", startQuiz);
-  document.getElementById("study-card")?.addEventListener("click", revealStudyCard);
-  document.getElementById("study-next-btn")?.addEventListener("click", nextStudyCard);
-  document.getElementById("study-prev-btn")?.addEventListener("click", previousStudyCard);
+  initStudyCardSwipe();
 
   document.addEventListener("keydown", (event) => {
     if (!quizActive) return;
     const tag = event.target.tagName;
     if (tag === "INPUT" || tag === "TEXTAREA") return;
-    if (event.target.closest(".study-mode-actions")) return;
 
     if (event.key === " " || event.key === "Enter") {
       event.preventDefault();
-      if (!studyRevealed) {
-        revealStudyCard();
-      } else {
-        nextStudyCard();
-      }
+      toggleStudyCard();
     } else if (event.key === "ArrowRight") {
-      nextStudyCard();
+      event.preventDefault();
+      if (studyIndex < quizCards.length - 1) {
+        goToStudyCard(1, "right");
+      } else {
+        showQuizComplete();
+      }
     } else if (event.key === "ArrowLeft" && studyIndex > 0) {
-      previousStudyCard();
+      event.preventDefault();
+      goToStudyCard(-1, "left");
     }
   });
 });

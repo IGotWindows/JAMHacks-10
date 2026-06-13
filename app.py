@@ -15,39 +15,39 @@ app = Flask(__name__)
 
 SAMPLE_EVENTS = {
     3: [
-        {"title": "Math quiz — Algebra II", "startTime": "09:00", "endTime": "09:45"},
+        {"title": "Math quiz — Algebra II", "startTime": "09:00", "endTime": "09:45", "isAssessment": True},
         {"title": "Soccer practice", "startTime": "15:30", "endTime": "17:00"},
     ],
     5: [
-        {"title": "English essay due", "startTime": "08:00", "endTime": "08:50"},
+        {"title": "English essay due", "startTime": "08:00", "endTime": "08:50", "isAssessment": True},
         {"title": "Drama club", "startTime": "16:00", "endTime": "17:30"},
     ],
-    8: [{"title": "Science lab report due", "startTime": "14:00", "endTime": "15:00"}],
+    8: [{"title": "Science lab report due", "startTime": "14:00", "endTime": "15:00", "isAssessment": True}],
     10: [
-        {"title": "History presentation", "startTime": "10:00", "endTime": "11:00"},
+        {"title": "History presentation", "startTime": "10:00", "endTime": "11:00", "isAssessment": True},
         {"title": "Student council meeting", "startTime": "12:30", "endTime": "13:15"},
     ],
-    12: [{"title": "PSAT prep session", "startTime": "14:00", "endTime": "16:00"}],
+    12: [{"title": "PSAT prep session", "startTime": "14:00", "endTime": "16:00", "isAssessment": True}],
     15: [
-        {"title": "Midterm: Biology", "startTime": "09:00", "endTime": "10:30"},
+        {"title": "Midterm: Biology", "startTime": "09:00", "endTime": "10:30", "isAssessment": True},
         {"title": "Yearbook committee", "startTime": "15:00", "endTime": "16:00"},
     ],
     17: [
-        {"title": "Spanish oral exam", "startTime": "11:00", "endTime": "11:45"},
+        {"title": "Spanish oral exam", "startTime": "11:00", "endTime": "11:45", "isAssessment": True},
         {"title": "Homework night — no clubs", "startTime": "18:00", "endTime": "20:00"},
     ],
     19: [{"title": "College fair", "startTime": "18:00", "endTime": "20:00"}],
     22: [
-        {"title": "Math test — Pre-calculus", "startTime": "09:00", "endTime": "10:00"},
+        {"title": "Math test — Pre-calculus", "startTime": "09:00", "endTime": "10:00", "isAssessment": True},
         {"title": "Varsity game", "startTime": "17:00", "endTime": "19:00"},
     ],
-    24: [{"title": "Group project: World History", "startTime": "13:00", "endTime": "14:30"}],
+    24: [{"title": "Group project: World History", "startTime": "13:00", "endTime": "14:30", "isAssessment": True}],
     26: [
-        {"title": "AP English reading due", "startTime": "08:00", "endTime": "08:50"},
+        {"title": "AP English reading due", "startTime": "08:00", "endTime": "08:50", "isAssessment": True},
         {"title": "Chess club", "startTime": "15:45", "endTime": "17:00"},
     ],
     28: [
-        {"title": "End-of-month review", "startTime": "12:00", "endTime": "12:40"},
+        {"title": "End-of-month review", "startTime": "12:00", "endTime": "12:40", "isAssessment": True},
         {"title": "Study session", "startTime": "19:00", "endTime": "21:00"},
     ],
 }

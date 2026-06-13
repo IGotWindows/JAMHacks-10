@@ -116,6 +116,113 @@ def _openai_request(body, api_key):
         return json.loads(response.read().decode("utf-8"))
 
 
+def _http_error_message(exc):
+    try:
+        body = json.loads(exc.read().decode("utf-8"))
+        return body.get("error", {}).get("message") or f"HTTP {exc.code}"
+    except Exception:
+        return f"HTTP {exc.code}"
+
+
+def _gemini_models():
+    preferred = os.environ.get("GEMINI_MODEL", "").strip()
+    models = [
+        preferred,
+        "gemini-2.5-flash",
+        "gemini-3.5-flash",
+        "gemini-2.0-flash",
+    ]
+    seen = set()
+    ordered = []
+    for model in models:
+        if model and model not in seen:
+            seen.add(model)
+            ordered.append(model)
+    return ordered
+
+
+def _gemini_request(body, api_key, model):
+    url = (
+        f"https://generativelanguage.googleapis.com/v1beta/models/"
+        f"{model}:generateContent"
+    )
+    request = urllib.request.Request(
+        url,
+        data=json.dumps(body).encode("utf-8"),
+        headers={
+            "x-goog-api-key": api_key,
+            "Content-Type": "application/json",
+        },
+        method="POST",
+    )
+    with urllib.request.urlopen(request, timeout=90) as response:
+        return json.loads(response.read().decode("utf-8"))
+
+
+def _flashcard_prompt(count, label, notes_excerpt):
+    return (
+        f'Create exactly {count} exam-style flashcards from these notes ("{label}").\n\n'
+        f"NOTES:\n{notes_excerpt}\n\n"
+        "Rules:\n"
+        "- One specific fact per card — no multi-part questions.\n"
+        "- Questions must stand alone (under 120 characters).\n"
+        "- Answers must be concise but complete (under 25 words).\n"
+        "- Mix definitions, why/how, comparisons, fill-in-the-blank, and application.\n"
+        "- Cover different topics from the notes — avoid repetition.\n"
+        "- Only use information explicitly stated in the notes.\n"
+        "- No vague cards like \"What is important about X?\"\n\n"
+        'Return JSON only: {"cards":[{"question":"...","answer":"..."}]}'
+    )
+
+
+def _generate_gemini_from_notes(notes_text, count, api_key, label):
+    notes_excerpt = notes_text[:30000]
+    system_prompt = (
+        "You are an expert study coach who writes high-quality exam flashcards from student notes. "
+        "Each card tests one clear, specific fact. Questions must be precise and standalone. "
+        "Answers must be short (under 25 words) but accurate. "
+        "Only use facts from the provided notes — never invent information. "
+        "Respond with valid JSON only."
+    )
+    body = {
+        "systemInstruction": {"parts": [{"text": system_prompt}]},
+        "contents": [
+            {
+                "role": "user",
+                "parts": [{"text": _flashcard_prompt(count, label, notes_excerpt)}],
+            }
+        ],
+        "generationConfig": {
+            "temperature": 0.4,
+            "responseMimeType": "application/json",
+        },
+    }
+
+    last_error = "Gemini request failed."
+    for model in _gemini_models():
+        try:
+            payload = _gemini_request(body, api_key, model)
+            candidates = payload.get("candidates") or []
+            if not candidates:
+                raise ValueError("Gemini returned no candidates.")
+
+            parts = candidates[0].get("content", {}).get("parts") or []
+            if not parts:
+                raise ValueError("Gemini returned empty content.")
+
+            return _parse_cards_payload(parts[0].get("text", ""))
+        except urllib.error.HTTPError as exc:
+            last_error = _http_error_message(exc)
+            # Auth/billing issues won't be fixed by switching models.
+            if exc.code in (401, 403):
+                raise RuntimeError(f"Gemini auth failed: {last_error}") from exc
+            continue
+        except (urllib.error.URLError, TimeoutError):
+            raise
+
+    raise RuntimeError(f"Gemini request failed: {last_error}")
+
+
 def _generate_openai_from_notes(notes_text, count, api_key, label):
     notes_excerpt = notes_text[:12000]
     system_prompt = (
@@ -124,17 +231,7 @@ def _generate_openai_from_notes(notes_text, count, api_key, label):
         "Questions must be clear and standalone. Answers must be short (under 25 words). "
         "Only use information from the provided notes. Respond with valid JSON only."
     )
-    user_prompt = (
-        f'Create exactly {count} flashcards from these notes ("{label}").\n\n'
-        f"NOTES:\n{notes_excerpt}\n\n"
-        "Rules:\n"
-        "- One fact per card.\n"
-        "- Questions under 120 characters.\n"
-        "- Answers under 25 words.\n"
-        "- Mix definitions, process steps, comparisons, and fill-in-the-blank.\n"
-        "- No vague or repetitive cards.\n\n"
-        'Return JSON only: {"cards":[{"question":"...","answer":"..."}]}'
-    )
+    user_prompt = _flashcard_prompt(count, label, notes_excerpt)
     body = {
         "model": "gpt-4o-mini",
         "messages": [
@@ -304,15 +401,34 @@ def _generate_from_text(text, count, label):
     return cards[:count]
 
 
+def _get_gemini_api_key():
+    return (
+        os.environ.get("GEMINI_API_KEY", "").strip()
+        or os.environ.get("GOOGLE_API_KEY", "").strip()
+    )
+
+
 def generate_flashcards_from_pdf(file_bytes, filename, count=5):
     notes_text = extract_pdf_text(file_bytes)
     label = _clean_label(filename)
     count = _clamp_count(count)
-    api_key = os.environ.get("OPENAI_API_KEY", "").strip()
+    gemini_key = _get_gemini_api_key()
+    openai_key = os.environ.get("OPENAI_API_KEY", "").strip()
 
-    if api_key:
+    if gemini_key:
         try:
-            cards = _generate_openai_from_notes(notes_text, count, api_key, label)
+            cards = _generate_gemini_from_notes(notes_text, count, gemini_key, label)
+            return {"cards": cards[:count], "source": "gemini", "filename": filename}
+        except RuntimeError:
+            raise
+        except urllib.error.HTTPError as exc:
+            raise RuntimeError(f"Gemini request failed: {_http_error_message(exc)}") from exc
+        except (urllib.error.URLError, TimeoutError, KeyError, json.JSONDecodeError, ValueError) as exc:
+            raise RuntimeError("Could not parse Gemini flashcards. Try again.") from exc
+
+    if openai_key:
+        try:
+            cards = _generate_openai_from_notes(notes_text, count, openai_key, label)
             return {"cards": cards[:count], "source": "openai", "filename": filename}
         except urllib.error.HTTPError as exc:
             exc.read()

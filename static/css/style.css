@@ -1085,6 +1085,21 @@ button:disabled {
   font-size: 0.9rem;
 }
 
+.study-card-swipe-wrap {
+  overflow: hidden;
+  touch-action: none;
+  user-select: none;
+  margin-bottom: 12px;
+}
+
+.study-swipe-hint {
+  margin: 0;
+  text-align: center;
+  color: #64748b;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
 .study-flashcard {
   display: flex;
   flex-direction: column;
@@ -1100,10 +1115,45 @@ button:disabled {
   color: #e2e8f0;
   cursor: pointer;
   text-align: center;
-  transition: border-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+  transition: border-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease, opacity 0.2s ease;
 }
 
-.study-flashcard:hover {
+.study-flashcard.is-dragging {
+  transition: none;
+  cursor: grabbing;
+}
+
+.study-flashcard.slide-in-from-right {
+  animation: study-card-in-right 0.28s ease;
+}
+
+.study-flashcard.slide-in-from-left {
+  animation: study-card-in-left 0.28s ease;
+}
+
+@keyframes study-card-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(48px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes study-card-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-48px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.study-flashcard:not(.is-dragging):hover {
   border-color: #475569;
   transform: translateY(-1px);
   box-shadow: 0 10px 30px rgba(15, 23, 42, 0.35);
@@ -1141,17 +1191,6 @@ button:disabled {
 .study-flashcard-hint {
   color: #64748b;
   font-size: 0.85rem;
-}
-
-.study-mode-actions {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  margin-top: 16px;
-}
-
-.study-mode-actions .btn {
-  min-width: 120px;
 }
 
 @media (max-width: 700px) {
@@ -1545,8 +1584,17 @@ input {
   white-space: nowrap;
 }
 
+.study-page .page-subtitle {
+  max-width: none;
+  white-space: nowrap;
+}
+
 @media (max-width: 720px) {
   .calendar-page .page-subtitle {
+    white-space: normal;
+  }
+
+  .study-page .page-subtitle {
     white-space: normal;
   }
 }
@@ -1784,6 +1832,48 @@ input {
   gap: 12px;
   flex-wrap: wrap;
   align-items: flex-end;
+}
+
+.add-event-form .event-assessment-check {
+  width: 100%;
+  margin: 0;
+}
+
+.event-assessment-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  color: #cbd5e1;
+  font-size: 0.95rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.event-assessment-check input[type="checkbox"] {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  min-width: 18px;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: 4px;
+  max-width: none;
+  accent-color: #3b82f6;
+  cursor: pointer;
+}
+
+.panel-event-item .event-assessment-check {
+  margin-top: 4px;
+}
+
+.day-event-assessment .day-event-title {
+  color: #93c5fd;
+}
+
+.day-event-assessment .day-event-time {
+  color: #60a5fa;
 }
 
 .add-event-form input[type="text"] {

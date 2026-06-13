@@ -49,6 +49,7 @@ function initCalendar() {
   const selectedDayEvents = document.getElementById("selected-day-events");
   const noEventsMsg = document.getElementById("no-events-msg");
   const newEventInput = document.getElementById("new-event-input");
+  const newEventAssessment = document.getElementById("new-event-assessment");
   const addFormStartPicker = attachTimePicker(
     document.getElementById("event-start-picker"),
     () => {}
@@ -94,6 +95,9 @@ function initCalendar() {
     dayEvents[originalIndex] = next;
     saveCurrentMonthEvents(getCurrentMonthEvents());
     renderCalendar();
+    if (Object.prototype.hasOwnProperty.call(updates, "isAssessment")) {
+      renderPanelEvents();
+    }
     return true;
   }
 
@@ -121,6 +125,7 @@ function initCalendar() {
 
   function clearEventForm() {
     newEventInput.value = "";
+    if (newEventAssessment) newEventAssessment.checked = false;
     addFormStartPicker.setValue("");
     addFormEndPicker.setValue("");
   }
@@ -156,6 +161,9 @@ function initCalendar() {
             events.slice(0, 2).forEach((event) => {
               const item = document.createElement("li");
               item.className = "day-event-item";
+              if (normalizeEvent(event).isAssessment) {
+                item.classList.add("day-event-assessment");
+              }
               appendEventLabelElements(item, event);
               list.appendChild(item);
             });
@@ -244,6 +252,21 @@ function initCalendar() {
       timesRow.appendChild(endPicker.box);
 
       item.appendChild(timesRow);
+
+      const evalLabel = document.createElement("label");
+      evalLabel.className = "event-assessment-check";
+      const evalCheck = document.createElement("input");
+      evalCheck.type = "checkbox";
+      evalCheck.checked = normalized.isAssessment;
+      evalCheck.addEventListener("change", () => {
+        updateEvent(originalIndex, { isAssessment: evalCheck.checked });
+      });
+      const evalText = document.createElement("span");
+      evalText.textContent = "This is an assessment";
+      evalLabel.appendChild(evalCheck);
+      evalLabel.appendChild(evalText);
+      item.appendChild(evalLabel);
+
       selectedDayEvents.appendChild(item);
     });
   }
@@ -270,6 +293,7 @@ function initCalendar() {
     const title = newEventInput.value.trim();
     const startTime = addFormStartPicker.getValue();
     const endTime = addFormEndPicker.getValue();
+    const isAssessment = Boolean(newEventAssessment?.checked);
 
     if (!title) return;
     if (startTime && endTime && endTime <= startTime) {
@@ -278,7 +302,7 @@ function initCalendar() {
     }
 
     const dayEvents = getSelectedDayEvents();
-    dayEvents.push({ title, startTime, endTime });
+    dayEvents.push({ title, startTime, endTime, isAssessment });
     saveCurrentMonthEvents(getCurrentMonthEvents());
     clearEventForm();
     renderPanelEvents();
