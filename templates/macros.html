@@ -1,0 +1,14 @@
+{% macro logo_badge(link=none) -%}
+{% if link %}
+<a class="logo" href="{{ link }}">
+{% endif %}
+  <span class="logo-badge">
+    <span class="logo-icon" aria-hidden="true">
+      <img src="{{ url_for('static', filename='img/logo.png') }}" alt="" class="logo-img" width="40" height="40">
+    </span>
+    <span class="logo-text">Studious_Nga</span>
+  </span>
+{% if link %}
+</a>
+{% endif %}
+{%- endmacro %}

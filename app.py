@@ -83,7 +83,22 @@ def calendar_json_for_template():
 
 
 @app.route("/")
-def home():
+def landing():
+    return render_template("landing.html")
+
+
+@app.route("/login")
+def login():
+    return render_template("login.html")
+
+
+@app.route("/signup")
+def signup():
+    return render_template("signup.html")
+
+
+@app.route("/dashboard")
+def dashboard():
     return render_template("dashboard.html", calendar_json=calendar_json_for_template())
 
 

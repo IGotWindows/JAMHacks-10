@@ -3,32 +3,49 @@
 {% block content %}
 <div class="dashboard-layout">
   <section class="dashboard-main">
-    <div class="hero dashboard-hero">
+    <header class="dashboard-hero">
       <h1>Study smarter, not longer.</h1>
-      <p class="page-subtitle">Your home base for wellness, scheduling, and school tools — everything in one place.</p>
-    </div>
 
-    <div class="quick-links dashboard-links">
-      <a class="quick-link card" href="{{ url_for('education') }}">
-        <span class="quick-link-icon">🎓</span>
-        <h2>Education</h2>
-        <p>Focus sessions, flashcards, and grade planning in one spot.</p>
-      </a>
-      <a class="quick-link card" href="{{ url_for('health') }}">
-        <span class="quick-link-icon">💚</span>
-        <h2>Health</h2>
-        <p>Track sleep, hydration, and mood. See how wellness shapes your focus.</p>
-      </a>
-      <a class="quick-link card quick-link-wide" href="{{ url_for('calendar_page') }}">
-        <span class="quick-link-icon">📅</span>
-        <h2>Calendar</h2>
-        <p>Plan assignments, tests, and activities — all saved to your schedule.</p>
-      </a>
+      <div class="dashboard-profile">
+        <button type="button" class="profile-avatar" id="profile-avatar-btn" aria-label="Change profile picture">
+          <img id="profile-picture" class="profile-picture hidden" alt="">
+          <span id="profile-placeholder" class="profile-placeholder" aria-hidden="true"></span>
+          <span class="profile-avatar-label">Change photo</span>
+        </button>
+        <input type="file" id="profile-picture-input" class="hidden" accept="image/*">
+
+        <div class="profile-details">
+          <p class="profile-hi">Hi, <span id="profile-first-name">there</span></p>
+          <p class="profile-full-name" id="profile-full-name">Your name</p>
+        </div>
+      </div>
+
+      <p class="dashboard-welcome-prompt">Welcome — what do you want to work on?</p>
+    </header>
+
+    <div class="dashboard-section">
+      <div class="quick-links dashboard-links">
+        <a class="quick-link card scroll-reveal" href="{{ url_for('education') }}" data-reveal-delay="0">
+          <span class="quick-link-icon" aria-hidden="true">🎓</span>
+          <h3>Education</h3>
+          <p>Focus sessions, flashcards, and grade tools when you need to study.</p>
+        </a>
+        <a class="quick-link card scroll-reveal" href="{{ url_for('calendar_page') }}" data-reveal-delay="1">
+          <span class="quick-link-icon" aria-hidden="true">📅</span>
+          <h3>Calendar</h3>
+          <p>Keep tests, assignments, and activities organized by day.</p>
+        </a>
+        <a class="quick-link card scroll-reveal" href="{{ url_for('health') }}" data-reveal-delay="2">
+          <span class="quick-link-icon" aria-hidden="true">💚</span>
+          <h3>Health</h3>
+          <p>Log sleep, water, and mood — and spot patterns in your focus.</p>
+        </a>
+      </div>
     </div>
   </section>
 
-  <aside class="upcoming-sidebar card">
-    <h2>This Week</h2>
+  <aside class="upcoming-sidebar card scroll-reveal" data-reveal-delay="1">
+    <h2 class="sidebar-title">This week</h2>
     <ul id="upcoming-events-list" class="upcoming-events-list"></ul>
     <p id="no-upcoming-events" class="no-upcoming-events hidden">Nothing scheduled this week. Add events on your calendar.</p>
     <a class="btn secondary upcoming-calendar-link" href="{{ url_for('calendar_page') }}">Open Calendar</a>
@@ -39,6 +56,7 @@
 {% endblock %}
 
 {% block scripts %}
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
 <script src="{{ url_for('static', filename='js/calendar-events.js') }}"></script>
 <script src="{{ url_for('static', filename='js/upcoming-events.js') }}"></script>
 {% endblock %}
