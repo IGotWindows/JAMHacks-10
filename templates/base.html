@@ -10,7 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-<body data-require-auth="true">
+<body data-require-auth="true" data-page="{{ request.endpoint }}">
   <nav class="nav">
     {{ logo_badge(url_for('dashboard')) }}
     <div class="links">
@@ -27,6 +27,12 @@
   </main>
 
   <script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/focus-session.js') }}"></script>
+  <script type="module">
+    import { refreshBackgroundFocusTracking } from '{{ url_for("static", filename="js/focus-background.mjs") }}';
+    window.__studiousRefreshBackground = refreshBackgroundFocusTracking;
+    refreshBackgroundFocusTracking();
+  </script>
   <script src="{{ url_for('static', filename='js/app.js') }}"></script>
   {% block scripts %}{% endblock %}
 </body>

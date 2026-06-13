@@ -1,8 +1,10 @@
 {% extends "base.html" %}
+{% from "macros.html" import education_back %}
 {% block title %}Grades — Studious{% endblock %}
 {% block content %}
 <div class="grades-layout">
   <section class="grades-main">
+    {{ education_back() }}
     <h1 class="page-title">Grades</h1>
     <p class="page-subtitle">See assessments coming up from your calendar and calculate what you need to hit your target grade.</p>
 
