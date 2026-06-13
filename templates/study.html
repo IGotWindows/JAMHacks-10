@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Study{% endblock %}
+{% block content %}
+<h1>Study Tools</h1>
+<div class="card">
+  <h2>Create Flashcard</h2>
+  <input id="question" placeholder="Question">
+  <input id="answer" placeholder="Answer">
+  <button class="btn primary" onclick="addFlashcard()">Add Flashcard</button>
+</div>
+
+<div class="card">
+  <h2>Your Flashcards</h2>
+  <ul id="flashcard-list"></ul>
+</div>
+{% endblock %}

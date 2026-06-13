@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Focus{% endblock %}
+{% block content %}
+<h1>Focus Session</h1>
+<div class="focus-grid">
+  <div class="card">
+    <h2>Pomodoro Timer</h2>
+    <div id="timer">25:00</div>
+    <div class="hero-buttons">
+      <button class="btn primary" onclick="startTimer()">Start</button>
+      <button class="btn secondary" onclick="resetTimer()">Reset</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Webcam Preview</h2>
+    <video id="cam" autoplay playsinline></video>
+    <p id="status">Camera not started.</p>
+    <div class="hero-buttons">
+      <button class="btn primary" onclick="startCamera()">Start Camera</button>
+      <button class="btn secondary" onclick="closeCamera()">Close Camera</button>
+    </div>
+  </div>
+</div>
+{% endblock %}
