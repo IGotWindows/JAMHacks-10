@@ -45,17 +45,17 @@
   </section>
 
   <aside class="dashboard-sidebar">
-    <div class="upcoming-sidebar card scroll-reveal" data-reveal-delay="1">
+    <a class="focus-cta card scroll-reveal" href="{{ url_for('focus') }}" data-reveal-delay="1">
+      <img class="focus-cta-icon" src="{{ url_for('static', filename='img/camera.svg') }}" alt="">
+      <span class="focus-cta-label">Start Focusing Now!</span>
+    </a>
+
+    <div class="upcoming-sidebar card scroll-reveal" data-reveal-delay="2">
       <h2 class="sidebar-title">This week</h2>
       <ul id="upcoming-events-list" class="upcoming-events-list"></ul>
       <p id="no-upcoming-events" class="no-upcoming-events hidden">Nothing scheduled this week. Add events on your calendar.</p>
       <a class="btn secondary upcoming-calendar-link" href="{{ url_for('calendar_page') }}">Open Calendar</a>
     </div>
-
-    <a class="focus-cta card scroll-reveal" href="{{ url_for('focus') }}" data-reveal-delay="2">
-      <img class="focus-cta-icon" src="{{ url_for('static', filename='img/camera.svg') }}" alt="">
-      <span class="focus-cta-label">Start Focusing Now!</span>
-    </a>
   </aside>
 </div>
 
