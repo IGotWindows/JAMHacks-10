@@ -140,6 +140,29 @@ body {
   color: #e2e8f0;
 }
 
+.page-back {
+  color: #94a3b8;
+  display: inline-block;
+  font-size: 0.95rem;
+  margin-bottom: 16px;
+  text-decoration: none;
+}
+
+.page-back:hover {
+  color: #e2e8f0;
+}
+
+.focus-bg-video {
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  width: 1px;
+  z-index: -1;
+}
+
 .auth-title {
   margin: 0 0 8px;
   font-size: 1.75rem;
@@ -1241,6 +1264,93 @@ button:disabled {
 
 .focus-timer-display.focus-timer-paused {
   color: #fbbf24;
+}
+
+.focus-elapsed-label {
+  color: #6b7a8f;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  margin: 0 0 6px;
+  text-transform: uppercase;
+}
+
+.focus-elapsed-display {
+  color: #7a8a9e;
+  font-size: 1.75rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  margin: 0 0 20px;
+}
+
+.focus-elapsed-display.focus-elapsed-active {
+  color: #94a3b8;
+}
+
+.focus-session-pip {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 1000;
+  pointer-events: auto;
+}
+
+.focus-session-pip-card {
+  background: linear-gradient(145deg, rgba(30, 41, 59, 0.96), rgba(15, 23, 42, 0.98));
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  min-width: 148px;
+  padding: 10px 12px 8px;
+}
+
+.focus-session-pip-title {
+  color: #94a3b8;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  margin: 0 0 6px;
+  text-transform: uppercase;
+}
+
+.focus-session-pip-row {
+  align-items: baseline;
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.focus-session-pip-label {
+  color: #64748b;
+  font-size: 0.72rem;
+}
+
+.focus-session-pip-time {
+  color: #cbd5e1;
+  font-size: 0.95rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+.focus-session-pip-time-focused.is-counting {
+  color: #4ade80;
+}
+
+.focus-session-pip-time-focused.is-paused {
+  color: #fbbf24;
+}
+
+.focus-session-pip-link {
+  color: #7dd3fc;
+  display: inline-block;
+  font-size: 0.72rem;
+  margin-top: 4px;
+  text-decoration: none;
+}
+
+.focus-session-pip-link:hover {
+  color: #bae6fd;
+  text-decoration: underline;
 }
 
 video {

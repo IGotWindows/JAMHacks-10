@@ -1,7 +1,9 @@
 {% extends "base.html" %}
+{% from "macros.html" import education_back %}
 {% block title %}Study — Studious{% endblock %}
 {% block content %}
 <div class="study-page">
+{{ education_back() }}
 <h1 class="page-title">Study</h1>
 <p class="page-subtitle">Upload a PDF to generate flashcards, build your deck, then quiz yourself card by card.</p>
 
