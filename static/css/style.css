@@ -1501,6 +1501,14 @@ input {
   transition: background 0.3s ease;
 }
 
+.tile-btn.tile-btn-session {
+  background: #10b981;
+}
+
+.tile-btn.tile-btn-session:hover {
+  background: #0f9c77;
+}
+
 .tile-btn:hover {
   background: #2563eb;
 }
