@@ -2,18 +2,81 @@
 {% block title %}Study — Studious{% endblock %}
 {% block content %}
 <h1 class="page-title">Study</h1>
-<p class="page-subtitle">Create flashcards and review them whenever you need a quick refresh.</p>
+<p class="page-subtitle">Build your deck, then start a quiz to review card by card.</p>
+
+<div id="quiz-launcher" class="card study-quiz-launcher">
+  <h2>Flashcard Quiz</h2>
+  <p id="quiz-deck-summary" class="study-quiz-summary">Loading deck...</p>
+  <button type="button" id="start-quiz-btn" class="btn primary" disabled>Start Quiz</button>
+  <p id="quiz-empty-msg" class="empty-state">Add or generate flashcards below, then start your quiz here.</p>
+</div>
+
+<div id="quiz-mode" class="card study-quiz-mode hidden">
+  <div class="study-mode-header">
+    <div>
+      <h2>Quiz</h2>
+      <p id="study-progress" class="study-progress">Card 1 of 1</p>
+    </div>
+    <button type="button" id="end-quiz-btn" class="btn secondary btn-small">Exit Quiz</button>
+  </div>
+
+  <div id="quiz-card-view">
+    <button type="button" id="study-card" class="study-flashcard" aria-live="polite">
+      <span class="study-flashcard-label" id="study-card-label">Question</span>
+      <p id="study-card-text" class="study-flashcard-text"></p>
+      <span id="study-card-hint" class="study-flashcard-hint">Tap the card to reveal the answer</span>
+    </button>
+
+    <div class="study-mode-actions">
+      <button type="button" id="study-prev-btn" class="btn secondary">Previous</button>
+      <button type="button" id="study-next-btn" class="btn primary">Next</button>
+    </div>
+  </div>
+
+  <div id="quiz-complete-view" class="study-quiz-complete hidden">
+    <h3>Quiz complete!</h3>
+    <p class="study-quiz-summary">You reviewed all <span id="quiz-complete-count">0</span> cards.</p>
+    <div class="study-quiz-complete-actions">
+      <button type="button" id="restart-quiz-btn" class="btn primary">Restart Quiz</button>
+      <button type="button" id="finish-quiz-btn" class="btn secondary">Back to Deck</button>
+    </div>
+  </div>
+</div>
+
+<div class="card study-ai-card">
+  <h2>Generate from Notes</h2>
+  <p class="study-card-intro">Upload a PDF of your class notes and Studious will build flashcards from them.</p>
+  <div class="study-ai-form">
+    <label class="study-file-field">
+      Notes PDF
+      <input id="notes-pdf" type="file" accept="application/pdf,.pdf">
+    </label>
+    <label class="study-count-field">
+      Number of cards
+      <input id="ai-count" type="number" min="1" max="15" step="1" value="5">
+    </label>
+    <button type="button" id="generate-flashcards-btn" class="btn primary">Generate Deck</button>
+  </div>
+  <p id="ai-status" class="study-ai-status">Upload a text-based PDF (not a photo scan). Add OPENAI_API_KEY to a .env file for smarter AI cards.</p>
+</div>
 
 <div class="card">
   <h2>New Flashcard</h2>
   <input id="question" type="text" placeholder="Front — question or term">
   <input id="answer" type="text" placeholder="Back — answer or definition">
-  <button class="btn primary" onclick="addFlashcard()">Add Card</button>
+  <button type="button" id="add-flashcard-btn" class="btn primary">Add Card</button>
 </div>
 
 <div class="card">
-  <h2>Your Deck</h2>
+  <div class="study-deck-header">
+    <h2>Manage Deck</h2>
+    <button type="button" id="clear-flashcards-btn" class="btn secondary btn-small">Clear All</button>
+  </div>
   <ul id="flashcard-list" class="flashcard-list"></ul>
-  <p id="no-flashcards" class="empty-state">No flashcards yet. Add your first one above.</p>
+  <p id="no-flashcards" class="empty-state">No flashcards yet. Generate a deck or add your first one above.</p>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/study.js') }}"></script>
 {% endblock %}

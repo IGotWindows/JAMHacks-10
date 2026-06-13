@@ -67,7 +67,6 @@ let timeLeft = 25 * 60;
 let timerInterval = null;
 let cameraStream = null;
 let currentSessionStartTime = null;
-let flashcards = [];
 
 function updateTimer() {
   const minutes = String(Math.floor(timeLeft / 60)).padStart(2, "0");
@@ -270,29 +269,6 @@ function quickAddWater() {
     waterTile.style.animation = "pulse 0.5s";
     setTimeout(() => waterTile.style.animation = "", 500);
   }
-}
-
-// ============ FLASHCARDS (LEGACY) ============
-
-function addFlashcard() {
-  const question = document.getElementById("question");
-  const answer = document.getElementById("answer");
-  const list = document.getElementById("flashcard-list");
-
-  if (!question || !answer || !list) return;
-  if (!question.value.trim() || !answer.value.trim()) return;
-
-  const q = question.value.trim();
-  const a = answer.value.trim();
-  flashcards.push({ question: q, answer: a });
-
-  const li = document.createElement("li");
-  li.textContent = `${q} — ${a}`;
-  list.appendChild(li);
-
-  question.value = "";
-  answer.value = "";
-  question.focus();
 }
 
 // ============ SCORE CALCULATIONS ============

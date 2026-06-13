@@ -3,6 +3,14 @@ from datetime import date
 import calendar
 import json
 
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
+from flashcard_ai import generate_flashcards_from_pdf
+
 app = Flask(__name__)
 
 SAMPLE_EVENTS = {
@@ -147,6 +155,32 @@ def get_dashboard_data():
         },
         "streak": 0
     })
+
+
+@app.route("/api/flashcards/generate", methods=["POST"])
+def generate_flashcards_api():
+    """Generate flashcards from an uploaded PDF of notes."""
+    upload = request.files.get("notes")
+    if not upload or not upload.filename:
+        return jsonify({"error": "Upload a PDF of your notes."}), 400
+
+    if not upload.filename.lower().endswith(".pdf"):
+        return jsonify({"error": "Please upload a PDF file."}), 400
+
+    file_bytes = upload.read()
+    max_size = 10 * 1024 * 1024
+    if len(file_bytes) > max_size:
+        return jsonify({"error": "PDF must be under 10 MB."}), 400
+
+    count = request.form.get("count", 5)
+
+    try:
+        result = generate_flashcards_from_pdf(file_bytes, upload.filename, count)
+        return jsonify(result)
+    except ValueError as exc:
+        return jsonify({"error": str(exc)}), 400
+    except RuntimeError as exc:
+        return jsonify({"error": str(exc)}), 502
 
 
 @app.route("/api/insights", methods=["GET"])
