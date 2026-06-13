@@ -1,29 +1,36 @@
 {% extends "auth_base.html" %}
-{% block title %}Sign In — Studious{% endblock %}
+{% from "macros.html" import auth_page_gradient %}
+{% block title %}Sign In — Study Space{% endblock %}
 {% block auth_page %}login{% endblock %}
 {% block content %}
-<div class="auth-page">
-  <div class="auth-card card">
-    <a href="{{ url_for('landing') }}" class="auth-back">← Back</a>
-    <h1 class="auth-title">Sign in</h1>
-    <p class="auth-subtitle">Welcome back — enter your username and password.</p>
+<div class="auth-shell">
+  <div id="login-gradient" class="animated-gradient-bg" aria-hidden="true"></div>
+  <div class="auth-page">
+    <div class="auth-card card">
+      <a href="{{ url_for('landing') }}" class="auth-back">← Back</a>
+      <h1 class="auth-title">Sign in</h1>
 
-    <form id="login-form" class="auth-form" data-redirect="{{ url_for('dashboard') }}" novalidate>
-      <label class="auth-field">
-        <span>Username</span>
-        <input type="text" id="login-username" name="username" autocomplete="username" required>
-      </label>
-      <label class="auth-field">
-        <span>Password</span>
-        <input type="password" id="login-password" name="password" autocomplete="current-password" required>
-      </label>
-      <p id="login-error" class="auth-error hidden" role="alert"></p>
-      <button type="submit" class="btn primary auth-submit">Sign In</button>
-    </form>
+      <form id="login-form" class="auth-form" data-redirect="{{ url_for('dashboard') }}" novalidate>
+        <label class="auth-field">
+          <span>Username</span>
+          <input type="text" id="login-username" name="username" autocomplete="username" required>
+        </label>
+        <label class="auth-field">
+          <span>Password</span>
+          <input type="password" id="login-password" name="password" autocomplete="current-password" required>
+        </label>
+        <p id="login-error" class="auth-error hidden" role="alert"></p>
+        <button type="submit" class="btn primary auth-submit">Sign In</button>
+      </form>
 
-    <p class="auth-switch">
-      Don't have an account? <a href="{{ url_for('signup') }}">Sign up</a>
-    </p>
+      <p class="auth-switch">
+        Don't have an account? <a href="{{ url_for('signup') }}">Sign up</a>
+      </p>
+    </div>
   </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+{{ auth_page_gradient('login-gradient') }}
 {% endblock %}

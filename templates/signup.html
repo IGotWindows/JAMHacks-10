@@ -1,43 +1,50 @@
 {% extends "auth_base.html" %}
-{% block title %}Sign Up — Studious{% endblock %}
+{% from "macros.html" import auth_page_gradient %}
+{% block title %}Sign Up — Study Space{% endblock %}
 {% block auth_page %}signup{% endblock %}
 {% block content %}
-<div class="auth-page">
-  <div class="auth-card card">
-    <a href="{{ url_for('landing') }}" class="auth-back">← Back</a>
-    <h1 class="auth-title">Create account</h1>
-    <p class="auth-subtitle">Set up your profile to get started.</p>
+<div class="auth-shell">
+  <div id="signup-gradient" class="animated-gradient-bg" aria-hidden="true"></div>
+  <div class="auth-page">
+    <div class="auth-card card">
+      <a href="{{ url_for('landing') }}" class="auth-back">← Back</a>
+      <h1 class="auth-title">Create account</h1>
 
-    <form id="signup-form" class="auth-form" data-redirect="{{ url_for('dashboard') }}" novalidate>
-      <div class="auth-field-row">
+      <form id="signup-form" class="auth-form" data-redirect="{{ url_for('dashboard') }}" novalidate>
+        <div class="auth-field-row">
+          <label class="auth-field">
+            <span>First name</span>
+            <input type="text" id="signup-first-name" name="firstName" autocomplete="given-name" required>
+          </label>
+          <label class="auth-field">
+            <span>Last name</span>
+            <input type="text" id="signup-last-name" name="lastName" autocomplete="family-name" required>
+          </label>
+        </div>
         <label class="auth-field">
-          <span>First name</span>
-          <input type="text" id="signup-first-name" name="firstName" autocomplete="given-name" required>
+          <span>Birthday</span>
+          <input type="date" id="signup-birthday" name="birthday" required>
         </label>
         <label class="auth-field">
-          <span>Last name</span>
-          <input type="text" id="signup-last-name" name="lastName" autocomplete="family-name" required>
+          <span>Username</span>
+          <input type="text" id="signup-username" name="username" autocomplete="username" required>
         </label>
-      </div>
-      <label class="auth-field">
-        <span>Birthday</span>
-        <input type="date" id="signup-birthday" name="birthday" required>
-      </label>
-      <label class="auth-field">
-        <span>Username</span>
-        <input type="text" id="signup-username" name="username" autocomplete="username" required>
-      </label>
-      <label class="auth-field">
-        <span>Password</span>
-        <input type="password" id="signup-password" name="password" autocomplete="new-password" minlength="4" required>
-      </label>
-      <p id="signup-error" class="auth-error hidden" role="alert"></p>
-      <button type="submit" class="btn primary auth-submit">Sign Up</button>
-    </form>
+        <label class="auth-field">
+          <span>Password</span>
+          <input type="password" id="signup-password" name="password" autocomplete="new-password" minlength="4" required>
+        </label>
+        <p id="signup-error" class="auth-error hidden" role="alert"></p>
+        <button type="submit" class="btn primary auth-submit">Sign Up</button>
+      </form>
 
-    <p class="auth-switch">
-      Already have an account? <a href="{{ url_for('login') }}">Sign in</a>
-    </p>
+      <p class="auth-switch">
+        Already have an account? <a href="{{ url_for('login') }}">Sign in</a>
+      </p>
+    </div>
   </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+{{ auth_page_gradient('signup-gradient') }}
 {% endblock %}

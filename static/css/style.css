@@ -94,6 +94,12 @@ body {
   border-color: rgba(148, 163, 184, 0.2);
 }
 
+.app-body .nav {
+  backdrop-filter: blur(12px);
+  background: rgba(17, 24, 39, 0.72);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+}
+
 /* Cover / landing */
 .cover-page {
   min-height: 100vh;
@@ -129,12 +135,34 @@ body {
 }
 
 .cover-title {
-  margin: 0 0 16px;
+  margin: 0 0 40px;
   font-size: clamp(2.5rem, 6vw, 3.75rem);
   font-weight: 600;
   letter-spacing: -0.03em;
   line-height: 1.1;
   color: #f8fafc;
+}
+
+.cover-title-typewriter .typewriter-text {
+  white-space: pre-line;
+}
+
+.typewriter-cursor {
+  animation: typewriter-cursor-pulse 0.8s step-end infinite;
+  color: #93c5fd;
+  font-weight: 400;
+  margin-left: 2px;
+}
+
+@keyframes typewriter-cursor-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
 }
 
 .cover-tagline {
@@ -209,7 +237,7 @@ body {
 }
 
 .auth-title {
-  margin: 0 0 8px;
+  margin: 0 0 24px;
   font-size: 1.75rem;
   font-weight: 600;
   color: #f1f5f9;
@@ -230,8 +258,12 @@ body {
 
 .auth-field-row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.auth-field-row .auth-field {
+  min-width: 0;
 }
 
 .auth-field {
@@ -247,6 +279,8 @@ body {
 }
 
 .auth-field input {
+  box-sizing: border-box;
+  width: 100%;
   padding: 12px 14px;
   border-radius: 10px;
   border: 1px solid #334155;
