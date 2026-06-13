@@ -12,6 +12,7 @@
     <div class="links">
       <a href="/">Home</a>
       <a href="/education">Education</a>
+      <a href="/calendar">Calendar</a>
     </div>
   </nav>
 
@@ -20,5 +21,6 @@
   </main>
 
   <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+  {% block scripts %}{% endblock %}
 </body>
 </html>

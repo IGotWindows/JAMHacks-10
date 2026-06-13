@@ -1,14 +1,28 @@
 {% extends "base.html" %}
 {% block title %}Home{% endblock %}
 {% block content %}
-<section class="hero">
-  <h1>Study smarter, not longer.</h1>
-  <p>Track your focus, stay on task, and review with flashcards.</p>
-  <div class="hero-buttons">
-    <a class="btn primary" href="/focus">Start Focusing (timer + webcam API)</a>
-    <a class="btn secondary" href="/study">Open Study Tools (split sections later)</a>
-  </div>
-</section>
+<div class="home-layout">
+  <section class="hero home-main">
+    <h1>Study smarter, not longer.</h1>
+    <p>Track your focus, stay on task, and review with flashcards.</p>
+    <div class="hero-buttons">
+      <a class="btn primary" href="/focus">Start Focusing (timer + webcam API)</a>
+      <a class="btn secondary" href="/study">Open Study Tools (split sections later)</a>
+    </div>
+  </section>
+
+  <aside class="upcoming-sidebar card">
+    <h2>Upcoming Events This Week</h2>
+    <ul id="upcoming-events-list" class="upcoming-events-list"></ul>
+    <p id="no-upcoming-events" class="no-upcoming-events hidden">No events left this week. Add some on the calendar.</p>
+    <a class="btn secondary upcoming-calendar-link" href="/calendar">View Calendar</a>
+  </aside>
+</div>
+
+<script id="calendar-init-data" type="application/json">{{ calendar_json|safe }}</script>
 {% endblock %}
 
-<!-- change project name later -->
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/calendar-events.js') }}"></script>
+<script src="{{ url_for('static', filename='js/upcoming-events.js') }}"></script>
+{% endblock %}
