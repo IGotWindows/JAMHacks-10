@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:5000";
+const BASE_URL = "http://localhost:5001";
 
 // Track the widget window ID so we don't open duplicates
 let widgetWindowId = null;
@@ -31,23 +31,12 @@ async function openWidget(path) {
     }
   }
 
-  // Get screen dimensions to position the widget on the right side
-  const screen = await chrome.system?.display?.getInfo().catch(() => null);
-  const screenWidth = screen?.[0]?.bounds?.width ?? 1920;
-  const screenHeight = screen?.[0]?.bounds?.height ?? 1080;
-
-  const width = 440;
-  const height = 760;
-  const left = screenWidth - width - 20;
-  const top = Math.floor((screenHeight - height) / 2);
-
   const win = await chrome.windows.create({
     url: BASE_URL + path,
     type: "popup",
-    width,
-    height,
-    left,
-    top,
+    width: 440,
+    height: 760,
+    focused: true,
   });
 
   widgetWindowId = win.id;
