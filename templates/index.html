@@ -1,14 +1,35 @@
 {% extends "base.html" %}
-{% block title %}Home{% endblock %}
+{% block title %}Welcome{% endblock %}
 {% block content %}
 <section class="hero">
-  <h1>Study smarter, not longer.</h1>
-  <p>Track your focus, stay on task, and review with flashcards.</p>
+  <h1>Welcome to StudyWell</h1>
+  <p>The wellness companion that connects your health to your focus.</p>
   <div class="hero-buttons">
-    <a class="btn primary" href="/focus">Start Focusing (timer + webcam API)</a>
-    <a class="btn secondary" href="/study">Open Study Tools (split sections later)</a>
+    <a class="btn primary" href="/">View Dashboard</a>
+    <a class="btn secondary" href="/focus">Start Focus Timer</a>
+  </div>
+</section>
+
+<section style="margin-top: 60px;">
+  <h2>How StudyWell Works</h2>
+  <p style="color: #cbd5e1; max-width: 600px;">
+    StudyWell shows you the connection between your wellness and your focus. Track your sleep, water, and mood alongside your study sessions. 
+    Our <strong>Focus + Wellness Score</strong> helps you see that taking care of yourself is how you study better. 
+  </p>
+  
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 30px;">
+    <div style="background: #111827; padding: 20px; border-radius: 12px; border: 1px solid #334155;">
+      <h3>🎯 Focus Timer</h3>
+      <p style="color: #cbd5e1;">Pomodoro-based study sessions with real-time tracking and session logging.</p>
+    </div>
+    <div style="background: #111827; padding: 20px; border-radius: 12px; border: 1px solid #334155;">
+      <h3>💧 Wellness Tracking</h3>
+      <p style="color: #cbd5e1;">Log water, sleep, and mood in one tap. See how they impact your focus.</p>
+    </div>
+    <div style="background: #111827; padding: 20px; border-radius: 12px; border: 1px solid #334155;">
+      <h3>📊 Your Patterns</h3>
+      <p style="color: #cbd5e1;">Discover correlations between your wellness habits and study performance.</p>
+    </div>
   </div>
 </section>
 {% endblock %}
-
-<!-- change project name later -->

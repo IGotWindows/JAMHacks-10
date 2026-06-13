@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<h1>Today's Wellness Check</h1>
+<p class="subtitle" id="user-greeting">Good morning! Let's track your day.</p>
+
+<!-- SCORE SECTION -->
+<div class="score-container">
+  <div class="score-box">
+    <h2>Focus + Wellness Score</h2>
+    <div class="score-display" id="combined-score">72<span class="score-unit">/100</span></div>
+    <p class="score-description">Your wellness and focus are connected. Higher score = better balance.</p>
+  </div>
+  <div class="streak-box">
+    <h2>Current Streak</h2>
+    <div class="streak-display" id="streak-count">5 days</div>
+    <p class="streak-description">Keep logging to maintain your streak!</p>
+  </div>
+</div>
+
+<!-- DATA TILES SECTION -->
+<div class="tiles-section">
+  <h2>Today's Metrics</h2>
+  <div class="tiles-grid">
+    <!-- Study / Focus Tile -->
+    <div class="tile">
+      <div class="tile-header">Study Time</div>
+      <div class="tile-value" id="tile-study">120<span class="tile-unit">min</span></div>
+      <div class="tile-sessions" id="tile-sessions">4 sessions</div>
+      <a href="/focus" class="tile-btn">Start Session</a>
+    </div>
+
+    <!-- Sleep Tile -->
+    <div class="tile">
+      <div class="tile-header">Sleep</div>
+      <div class="tile-value" id="tile-sleep">7<span class="tile-unit">hrs</span></div>
+      <div class="tile-sessions">Last night</div>
+      <button class="tile-btn" onclick="logWellnessModal('sleep')">Log Sleep</button>
+    </div>
+
+    <!-- Water Tile -->
+    <div class="tile">
+      <div class="tile-value" id="tile-water">6<span class="tile-unit">glasses</span></div>
+      <div class="tile-header">Water</div>
+      <div class="tile-sessions">Today</div>
+      <button class="tile-btn" onclick="quickAddWater()">+ 1 Glass</button>
+    </div>
+
+    <!-- Mood Tile -->
+    <div class="tile">
+      <div class="tile-header">Mood</div>
+      <div class="tile-mood" id="tile-mood">😊</div>
+      <div class="tile-sessions">How are you feeling?</div>
+      <button class="tile-btn" onclick="logWellnessModal('mood')">Update</button>
+    </div>
+  </div>
+</div>
+
+<!-- INSIGHTS / CORRELATION PANEL -->
+<div class="insights-section">
+  <h2>Your Patterns</h2>
+  <p class="insights-intro">Here's what we noticed about your wellness and focus:</p>
+  
+  <div class="insight-card" id="insight-sleep">
+    <div class="insight-icon">😴</div>
+    <div class="insight-content">
+      <h3>Sleep & Focus</h3>
+      <p id="insight-sleep-text">On days you sleep 7+ hours, your focus sessions are <strong>38% longer</strong> and your mood is higher.</p>
+    </div>
+  </div>
+
+  <div class="insight-card" id="insight-water">
+    <div class="insight-icon">💧</div>
+    <div class="insight-content">
+      <h3>Hydration & Clarity</h3>
+      <p id="insight-water-text">On days you drink 8+ glasses of water, your study time increases by <strong>25%</strong>.</p>
+    </div>
+  </div>
+
+  <div class="insight-card" id="insight-consistency">
+    <div class="insight-icon">🔥</div>
+    <div class="insight-content">
+      <h3>Consistency Wins</h3>
+      <p id="insight-consistency-text">Consistent logging correlates with <strong>higher focus scores</strong>. You're doing great!</p>
+    </div>
+  </div>
+</div>
+
+<!-- QUICK-LOG MODAL (hidden by default) -->
+<div id="wellness-modal" class="modal hidden">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeModal()">×</button>
+    <h2 id="modal-title">Log Wellness</h2>
+    
+    <!-- Sleep Log -->
+    <div id="sleep-section" class="modal-section hidden">
+      <label>How many hours did you sleep last night?</label>
+      <input type="number" id="sleep-input" min="0" max="12" step="0.5" placeholder="e.g., 7.5">
+      <button onclick="saveWellness('sleep')">Save Sleep</button>
+    </div>
+
+    <!-- Mood Log -->
+    <div id="mood-section" class="modal-section hidden">
+      <label>How are you feeling right now?</label>
+      <div class="mood-selector">
+        <button onclick="setMood(1)" class="mood-btn" data-mood="1">😢</button>
+        <button onclick="setMood(2)" class="mood-btn" data-mood="2">😟</button>
+        <button onclick="setMood(3)" class="mood-btn" data-mood="3">😐</button>
+        <button onclick="setMood(4)" class="mood-btn" data-mood="4">🙂</button>
+        <button onclick="setMood(5)" class="mood-btn" data-mood="5">😊</button>
+      </div>
+      <button onclick="saveWellness('mood')">Save Mood</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Initialize on page load
+  document.addEventListener("DOMContentLoaded", function() {
+    initializeData();
+    updateDashboard();
+  });
+</script>
+{% endblock %}
