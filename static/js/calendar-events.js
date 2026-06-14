@@ -6,7 +6,7 @@ const MONTH_NAMES = [
 const STORAGE_KEY = "studious-calendar-events";
 
 function getMonthKey(year, month) {
-  return `${year}-${month}`;
+  return `${year}-${String(month).padStart(2, "0")}`;
 }
 
 function normalizeEvent(event) {
@@ -445,7 +445,8 @@ function saveGCalCache(cache) {
 }
 
 function getGCalUrl() {
-  return localStorage.getItem("GCAL_URL_KEY") || "";
+  const stored = localStorage.getItem("GCAL_URL_KEY") || "";
+  return stored ? normalizeGCalUrl(stored) : "";
 }
 
 function setGCalUrl(url) {
@@ -456,6 +457,12 @@ function setGCalUrl(url) {
   }
 }
 
-function getMonthKey(year, month) {
-  return `${year}-${String(month).padStart(2, "0")}`;
+function normalizeGCalUrl(url) {
+  let value = String(url || "").trim();
+  if (value.toLowerCase().startsWith("webcal://")) {
+    value = "https://" + value.slice(9);
+  } else if (value.toLowerCase().startsWith("http://")) {
+    value = "https://" + value.slice(7);
+  }
+  return value;
 }

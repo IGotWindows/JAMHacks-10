@@ -322,23 +322,69 @@ def calendar_page():
 
 # ── Google Calendar iCal sync ──────────────────────────────────────────────────
 
-@app.route("/api/gcal/events", methods=["POST"])
-def gcal_events():
-    from icalendar import Calendar as ICal
+def _normalize_gcal_url(url):
+    url = str(url or "").strip()
+    if url.lower().startswith("webcal://"):
+        url = "https://" + url[9:]
+    elif url.lower().startswith("http://"):
+        url = "https://" + url[7:]
+    return url
+
+
+def _ical_date_time(value):
     from datetime import datetime as dt_cls, date as date_cls
 
+    if isinstance(value, dt_cls):
+        local = value.astimezone().replace(tzinfo=None) if value.tzinfo else value
+        return local.date(), local.strftime("%H:%M")
+    if isinstance(value, date_cls):
+        return value, ""
+    return None, None
+
+
+@app.route("/api/gcal/events", methods=["POST"])
+def gcal_events():
+    try:
+        from icalendar import Calendar as ICal
+    except ImportError:
+        return jsonify({
+            "error": "Calendar sync dependency missing — run: pip install icalendar",
+        }), 503
+
     data = request.get_json(silent=True) or {}
-    url = str(data.get("url", "")).strip()
-    year = int(data.get("year", 0))
-    month = int(data.get("month", 0))
+    url = _normalize_gcal_url(data.get("url", ""))
+    try:
+        year = int(data.get("year", 0))
+        month = int(data.get("month", 0))
+    except (TypeError, ValueError):
+        year, month = 0, 0
 
     if not url.startswith("https://") or not year or not month:
-        return jsonify({"error": "Invalid request"}), 400
+        return jsonify({"error": "Invalid calendar URL or date — use the secret iCal link from Google Calendar"}), 400
+
+    if "calendar.google.com" not in url and not url.lower().endswith(".ics"):
+        return jsonify({"error": "URL must be a Google Calendar iCal link ending in .ics"}), 400
 
     try:
-        req = urllib.request.Request(url, headers={"User-Agent": "StudiousApp/1.0"})
-        with urllib.request.urlopen(req, timeout=10) as resp:
+        req = urllib.request.Request(
+            url,
+            headers={
+                "User-Agent": "Mozilla/5.0 (compatible; StudySpace/1.0)",
+                "Accept": "text/calendar, text/plain, */*",
+            },
+        )
+        with urllib.request.urlopen(req, timeout=20) as resp:
             raw = resp.read()
+    except urllib.error.HTTPError as e:
+        if e.code in (401, 403):
+            msg = "Access denied — paste the secret iCal URL from Google Calendar settings (not the public link)"
+        elif e.code == 404:
+            msg = "Calendar not found — double-check your iCal URL"
+        elif e.code == 429:
+            msg = "Google rate limit — wait a minute and try again"
+        else:
+            msg = f"Google Calendar returned HTTP {e.code}"
+        return jsonify({"error": msg}), 502
     except urllib.error.URLError as e:
         return jsonify({"error": f"Could not reach calendar: {e.reason}"}), 502
     except Exception as e:
@@ -358,25 +404,17 @@ def gcal_events():
         if not dtstart:
             continue
 
-        dt = dtstart.dt
-        if isinstance(dt, dt_cls):
-            event_date = dt.date()
-            start_time = dt.strftime("%H:%M")
-        elif isinstance(dt, date_cls):
-            event_date = dt
-            start_time = ""
-        else:
+        event_date, start_time = _ical_date_time(dtstart.dt)
+        if not event_date:
             continue
 
         if event_date.year != year or event_date.month != month:
             continue
 
-        dtend = comp.get("DTEND")
         end_time = ""
+        dtend = comp.get("DTEND")
         if dtend:
-            end = dtend.dt
-            if isinstance(end, dt_cls):
-                end_time = end.strftime("%H:%M")
+            _, end_time = _ical_date_time(dtend.dt)
 
         day = str(event_date.day)
         events.setdefault(day, []).append({

@@ -61,17 +61,24 @@ function initCalendar() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ url, year, month }),
       });
-      const data = await resp.json();
-      if (data.error) throw new Error(data.error);
+      const data = await resp.json().catch(() => ({}));
+      if (!resp.ok || data.error) {
+        throw new Error(data.error || `Sync failed (${resp.status})`);
+      }
       gcalCache[key] = data.events;
       saveGCalCache(gcalCache);
       renderCalendar();
       if (selectedDay) renderPanelEvents();
       if (statusEl) statusEl.textContent = "Synced";
     } catch (e) {
-      if (statusEl) statusEl.textContent = "Sync failed";
-      console.error("GCal sync:", e.message);
+      const message = e.message || "Sync failed";
+      if (statusEl) statusEl.textContent = message;
+      console.error("GCal sync:", message);
     }
+  }
+
+  function syncGCalIfConnected() {
+    if (getGCalUrl()) syncGCal(currentYear, currentMonth);
   }
 
   const monthLabel = document.getElementById("month-label");
@@ -380,6 +387,7 @@ function initCalendar() {
     }
     closeDayPanel();
     renderCalendar();
+    syncGCalIfConnected();
   });
 
   document.getElementById("next-month").addEventListener("click", () => {
@@ -390,6 +398,7 @@ function initCalendar() {
     }
     closeDayPanel();
     renderCalendar();
+    syncGCalIfConnected();
   });
 
   document.getElementById("today-btn").addEventListener("click", () => {
@@ -397,6 +406,7 @@ function initCalendar() {
     currentMonth = initData.today_month;
     closeDayPanel();
     renderCalendar();
+    syncGCalIfConnected();
   });
 
   document.getElementById("close-panel-btn").addEventListener("click", closeDayPanel);
@@ -432,14 +442,20 @@ function initCalendar() {
 
   if (gcalConnectBtn) {
     gcalConnectBtn.addEventListener("click", async () => {
-      const url = gcalUrlInput.value.trim();
+      const url = normalizeGCalUrl(gcalUrlInput.value);
       gcalError.classList.add("hidden");
       if (!url) {
         gcalError.textContent = "Enter a Google Calendar iCal URL.";
         gcalError.classList.remove("hidden");
         return;
       }
+      if (!url.includes("calendar.google.com") && !url.toLowerCase().endsWith(".ics")) {
+        gcalError.textContent = "Paste the secret iCal URL from Google Calendar (ends in .ics).";
+        gcalError.classList.remove("hidden");
+        return;
+      }
       setGCalUrl(url);
+      gcalUrlInput.value = url;
       updateGCalUI();
     });
   }
