@@ -1,23 +1,47 @@
 {
   "manifest_version": 3,
-  "name": "Study Space Widget",
-  "version": "1.0",
-  "description": "Opens Study Space as a floating widget alongside any page",
-  "permissions": ["windows", "storage"],
+  "name": "StudySpace Companion",
+  "version": "2.0",
+  "description": "Persistent Opera GX sidebar companion for StudySpace — summaries, focus status, and quick navigation while you browse.",
+  "permissions": ["storage", "tabs"],
+
+  "sidebar_action": {
+    "default_panel": "sidebar.html",
+    "default_icon": {
+      "16":  "icons/icon16.png",
+      "48":  "icons/icon48.png",
+      "128": "icons/icon128.png"
+    },
+    "default_title": "StudySpace"
+  },
+
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
-      "16": "icons/icon16.png",
-      "48": "icons/icon48.png",
+      "16":  "icons/icon16.png",
+      "48":  "icons/icon48.png",
       "128": "icons/icon128.png"
     }
   },
+
   "background": {
     "service_worker": "background.js"
   },
+
+  "content_scripts": [
+    {
+      "matches": [
+        "http://127.0.0.1:5000/*",
+        "http://localhost:5000/*"
+      ],
+      "js": ["content-script.js"],
+      "run_at": "document_idle"
+    }
+  ],
+
   "icons": {
-    "16": "icons/icon16.png",
-    "48": "icons/icon48.png",
+    "16":  "icons/icon16.png",
+    "48":  "icons/icon48.png",
     "128": "icons/icon128.png"
   }
 }

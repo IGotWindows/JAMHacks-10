@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StudySpace</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Lexend:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="sidebar.css" />
+</head>
+<body>
+
+  <!-- ── Header ─────────────────────────────────────── -->
+  <header class="sb-header">
+    <div class="sb-logo">
+      <span class="sb-logo-icon">🚀</span>
+      <div class="sb-logo-text">
+        <h1 class="sb-title">StudySpace</h1>
+        <p class="sb-subtitle">Study companion</p>
+      </div>
+    </div>
+    <button id="refresh-btn" class="sb-icon-btn" title="Refresh data">↻</button>
+  </header>
+
+  <!-- ── Open App ───────────────────────────────────── -->
+  <div class="sb-open-row">
+    <button id="open-app-btn" class="sb-open-btn" data-path="/dashboard">
+      Open Full App →
+    </button>
+  </div>
+
+  <!-- ── Today Summary ──────────────────────────────── -->
+  <section class="sb-section">
+    <div class="sb-section-hd">
+      <span class="sb-section-label">Today</span>
+      <span id="sync-time" class="sb-sync-time">not synced</span>
+    </div>
+
+    <!-- shown when no data has synced yet -->
+    <div id="summary-no-data" class="sb-no-data hidden">
+      <span class="sb-no-data-icon">📡</span>
+      <p>Open the StudySpace app to sync your data.</p>
+    </div>
+
+    <div id="summary-content">
+
+      <!-- Focus card -->
+      <div class="sb-card sb-focus-card">
+        <div class="sb-card-hd">
+          <span class="sb-card-icon">⏱</span>
+          <span class="sb-card-title">Focus</span>
+          <div class="sb-session-status">
+            <span id="focus-active-dot" class="sb-dot"></span>
+            <span id="focus-active-text" class="sb-dot-label">No active session</span>
+          </div>
+        </div>
+        <div class="sb-stat-row">
+          <div class="sb-stat">
+            <span id="focus-mins" class="sb-stat-val">0</span>
+            <span class="sb-stat-lbl">min today</span>
+          </div>
+          <div class="sb-stat">
+            <span id="focus-sessions" class="sb-stat-val">0</span>
+            <span class="sb-stat-lbl">sessions</span>
+          </div>
+          <div class="sb-stat">
+            <span id="focus-streak" class="sb-stat-val">0</span>
+            <span class="sb-stat-lbl">day streak</span>
+          </div>
+        </div>
+        <button class="sb-card-action" data-path="/focus">Go to Focus →</button>
+      </div>
+
+      <!-- Health card -->
+      <div class="sb-card sb-health-card">
+        <div class="sb-card-hd">
+          <span class="sb-card-icon">💙</span>
+          <span class="sb-card-title">Health</span>
+        </div>
+        <div class="sb-health-row">
+          <div class="sb-health-item">
+            <span id="health-mood" class="sb-health-val">—</span>
+            <span class="sb-health-lbl">Mood</span>
+          </div>
+          <div class="sb-health-item">
+            <span id="health-water" class="sb-health-val">0/8</span>
+            <span class="sb-health-lbl">Water</span>
+          </div>
+          <div class="sb-health-item">
+            <span id="health-sleep" class="sb-health-val">—</span>
+            <span class="sb-health-lbl">Sleep</span>
+          </div>
+        </div>
+        <button class="sb-card-action" data-path="/health">Go to Health →</button>
+      </div>
+
+      <!-- Flashcard mini-quiz (hidden until cards exist) -->
+      <div id="flashcard-section" class="sb-card sb-flashcard-card hidden">
+        <div class="sb-card-hd">
+          <span class="sb-card-icon">🃏</span>
+          <span class="sb-card-title">Quick Quiz</span>
+          <span class="sb-badge"><span id="flashcard-count">0</span> cards</span>
+        </div>
+
+        <!-- Flip card -->
+        <div id="flashcard-card" class="sb-fc">
+          <div class="sb-fc-inner">
+            <div class="sb-fc-front">
+              <p id="flashcard-front" class="sb-fc-text">Loading…</p>
+              <span class="sb-fc-hint">tap to reveal answer</span>
+            </div>
+            <div class="sb-fc-back">
+              <p id="flashcard-back" class="sb-fc-text"></p>
+            </div>
+          </div>
+        </div>
+
+        <div class="sb-fc-actions">
+          <button id="flashcard-next" class="sb-card-action">Next card →</button>
+          <button class="sb-card-action sb-card-action--ghost" data-path="/study">All cards →</button>
+        </div>
+      </div>
+
+    </div><!-- /summary-content -->
+  </section>
+
+  <!-- ── Navigation ─────────────────────────────────── -->
+  <section class="sb-section">
+    <div class="sb-section-hd">
+      <span class="sb-section-label">Navigation</span>
+    </div>
+    <div class="sb-nav-grid">
+      <button class="sb-nav-btn" data-path="/dashboard">
+        <span class="sb-nav-icon">🏠</span>
+        <span class="sb-nav-lbl">Dashboard</span>
+      </button>
+      <button class="sb-nav-btn" data-path="/focus">
+        <span class="sb-nav-icon">🎯</span>
+        <span class="sb-nav-lbl">Focus</span>
+      </button>
+      <button class="sb-nav-btn" data-path="/study">
+        <span class="sb-nav-icon">📚</span>
+        <span class="sb-nav-lbl">Study</span>
+      </button>
+      <button class="sb-nav-btn" data-path="/education">
+        <span class="sb-nav-icon">🎓</span>
+        <span class="sb-nav-lbl">Education</span>
+      </button>
+      <button class="sb-nav-btn" data-path="/health">
+        <span class="sb-nav-icon">❤️</span>
+        <span class="sb-nav-lbl">Health</span>
+      </button>
+      <button class="sb-nav-btn" data-path="/calendar">
+        <span class="sb-nav-icon">📅</span>
+        <span class="sb-nav-lbl">Calendar</span>
+      </button>
+      <button class="sb-nav-btn" data-path="/grades">
+        <span class="sb-nav-icon">📊</span>
+        <span class="sb-nav-lbl">Grades</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- ── Footer ─────────────────────────────────────── -->
+  <footer class="sb-footer">
+    <span>StudySpace · <a id="footer-link" class="sb-footer-link" href="#">localhost:5000</a></span>
+  </footer>
+
+  <script src="sidebar.js"></script>
+</body>
+</html>

@@ -1,50 +1,31 @@
-const BASE_URL = "http://localhost:5000"; // Make sure to update this if your backend is running on a different port or domain
-
-// Track the widget window ID so we don't open duplicates
-let widgetWindowId = null;
+const BASE_URL = "http://localhost:5000";
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message.type === "OPEN_WIDGET") {
-    openWidget(message.path || "/dashboard");
+  if (message.type === "OPEN_APP") {
+    chrome.tabs.create({ url: BASE_URL + (message.path || "/dashboard") });
     sendResponse({ ok: true });
+
+  } else if (message.type === "OPEN_WIDGET") {
+    // Legacy popup path — reuse as tab open
+    chrome.tabs.create({ url: BASE_URL + (message.path || "/dashboard") });
+    sendResponse({ ok: true });
+
   } else if (message.type === "GET_WIDGET_STATE") {
-    sendResponse({ windowId: widgetWindowId });
-  }
-  return true;
-});
+    // Sidebar doesn't track a window ID — always "open"
+    sendResponse({ windowId: null });
 
-async function openWidget(path) {
-  // If the widget is already open, focus it and navigate
-  if (widgetWindowId !== null) {
-    try {
-      const win = await chrome.windows.get(widgetWindowId, { populate: true });
-      await chrome.windows.update(widgetWindowId, { focused: true });
-
-      // Navigate the widget's tab to the new path if requested
-      if (win.tabs && win.tabs.length > 0) {
-        await chrome.tabs.update(win.tabs[0].id, { url: BASE_URL + path });
+  } else if (message.type === "REQUEST_SYNC") {
+    // Ask any open Flask tab to re-push its localStorage to chrome.storage
+    chrome.tabs.query(
+      { url: ["http://127.0.0.1:5000/*", "http://localhost:5000/*"] },
+      (tabs) => {
+        tabs.forEach((tab) => {
+          chrome.tabs.sendMessage(tab.id, { type: "REQUEST_SYNC" }).catch(() => {});
+        });
       }
-      return;
-    } catch {
-      // Window was closed outside our tracking — reset and re-open
-      widgetWindowId = null;
-    }
+    );
+    sendResponse({ ok: true });
   }
 
-  const win = await chrome.windows.create({
-    url: BASE_URL + path,
-    type: "popup",
-    width: 440,
-    height: 760,
-    focused: true,
-  });
-
-  widgetWindowId = win.id;
-}
-
-// Clear tracked ID when the widget window is closed
-chrome.windows.onRemoved.addListener((windowId) => {
-  if (windowId === widgetWindowId) {
-    widgetWindowId = null;
-  }
+  return true;
 });
